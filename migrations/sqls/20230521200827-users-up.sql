@@ -1,6 +1,6 @@
 /* Replace with your SQL commands */
 CREATE TABLE IF NOT EXISTS users(
-    id SERIAL PRIMARY KEY UNIQE NOT NULL,
+    id SERIAL PRIMARY KEY UNIQUE NOT NULL,
     uname VARCHAR(50) UNIQUE NOT NULL,
     fname VARCHAR(50) NOT NULL,
     lname VARCHAR(50) NOT NULL,

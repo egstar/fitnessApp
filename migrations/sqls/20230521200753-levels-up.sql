@@ -1,6 +1,6 @@
 /* Replace with your SQL commands */
 CREATE TABLE IF NOT EXISTS levels(
-    id SERIAL PRIMARY KEY UNIQE NOT NULL,
+    id SERIAL PRIMARY KEY UNIQUE NOT NULL,
     level VARCHAR(250) UNIQUE NOT NULL
 );
 
