@@ -14,4 +14,3 @@ INSERT INTO menu (opt,url,logo, sub,level) VALUES
 ('My Scheduel', 'tasks', 'BsIcons.BsListStars', [], 1),
 ('Settings', 'settings', 'BsIcons.BsFillGearFill', [], 1),
 ('Support', 'support', 'FaIcons.FaEnvelope', [], 1);
--- ('Admin', 'admin', 'FaIcons.FaRegLifeRing', ARRAY['{sub: "Users",tree: "admin/users",level: 4}','{sub: "PLans",tree: "admin/plans",level: 3}','{sub: "Tasks",tree: "admin/tasks",level: 3}','{sub: "Menu",tree: "admin/Menu",level: 4}'], 3);
