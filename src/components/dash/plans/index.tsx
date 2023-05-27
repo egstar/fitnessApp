@@ -64,7 +64,7 @@ export const CreaetPlan = () => {
                     body: JSON.stringify({
                         planStart: startDate,
                         planDuration: userPlans.planDuration,
-                        planName: userPlans.planName+'[userplan]'+(new Date().getTime()).toFixed().toString(),
+                        planName: userPlans.planName+'-'+(new Date().getTime()).toFixed().toString(),
                         planTasks: [...tasks]
                     })
                 }).then((res) => res )
@@ -79,7 +79,7 @@ export const CreaetPlan = () => {
                     body: JSON.stringify({
                         planStart: startDate,
                         planDuration: userPlans.planDuration,
-                        planName: userPlans.planName+'[userplan]'+(new Date().getTime()).toFixed().toString()
+                        planName: userPlans.planName+'-'+(new Date().getTime()).toFixed().toString()
                     })
                 }).then((res) =>  res )
                 .then((data) => console.log(data))
