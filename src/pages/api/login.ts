@@ -7,7 +7,7 @@ import { uToken } from "@/data/config";
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<User|void> {
-    if(req.method !== 'POST' && req.headers.origin !== 'http://localhost:3000'){
+    if(req.method !== 'POST' && req.headers.origin !== 'https://fitness-app-dun.vercel.app'){
         throw new Error('Error, Access denied')
     }
 

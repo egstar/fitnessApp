@@ -6,7 +6,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
-    if(req.method !== 'PUT' && req.headers.origin !== 'http://localhost:3000'){
+    if(req.method !== 'PUT' && req.headers.origin !== 'https://fitness-app-dun.vercel.app'){
         throw new Error('Error, Access denied')
     }
     const currentSession = await getSession(req.cookies[uToken]!)

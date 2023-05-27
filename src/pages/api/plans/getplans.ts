@@ -7,7 +7,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
-    if(req.method !== 'POST'  && req.headers.origin !== 'http://localhost:3000'){
+    if(req.method !== 'POST'  && req.headers.origin !== 'https://fitness-app-dun.vercel.app'){
         throw new Error(`Error, Forbiden acccess.`)
     }
     const session = req.cookies[uToken]!
