@@ -1,0 +1,73 @@
+.main{
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(14, 12, 12);
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(14, 12, 12);
+    text-align: center;
+    max-width:100%;
+    height: 100vh;
+  }
+.box {
+    display: inline-block;
+    width:4rem;
+    height:4rem;
+    vertical-align: middle;
+    transition: 1s all ease;
+    transform:rotate(-45deg);
+    box-sizing: border-box;
+  }
+  .box div {
+    transform:rotate(45deg);
+    text-align:center;
+    display:flex;
+    position:relative;
+    justify-content:center;
+    align-items:center;
+    margin:auto;
+    width:100%;
+    height:100%;
+    z-index:-1;
+    font-weight:strong;
+    color:goldenrod;
+    
+  }
+  .box:after {
+    content:'';
+    display:block;
+    position:absolute;
+    top:0;
+    left:0;
+    width: 4rem;
+    height: 4rem;
+    border-bottom: solid 2rem transparent;
+    border-right: solid 2rem transparent;
+    border-left: solid 2rem powderblue;
+    border-top: solid 2rem powderblue;
+    box-shadow:-2px -2px  -1px black;
+    box-sizing: border-box;
+  }
+  .box:before {
+    content:'';
+    display:block;
+    position:absolute;
+    width: 4rem;
+    height: 4rem;
+    bottom:0;
+    right:0;
+    border-bottom: solid 2rem powderblue;
+    border-right: solid 2rem powderblue;
+    border-left: solid 2rem transparent;
+    border-top: solid 2rem transparent;
+    box-shadow:2px 2px -1px black;
+    box-sizing: border-box;
+  }
+  .box:hover{
+    top:-3rem;
+    height:10rem;
+    width:10rem;
+    cursor:pointer;
+    font-size:2rem;
+    
+  }
