@@ -7,7 +7,7 @@
         "database": {"ENV": "DB_DEV"},
         "driver": "pg"
     },
-    "prod": {
+    "production": {
         "user": {"ENV": "DB_USER"},
         "password": {"ENV": "DB_PASS"},
         "host": {"ENV": "DB_HOST"},
