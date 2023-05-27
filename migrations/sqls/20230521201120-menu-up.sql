@@ -9,8 +9,9 @@ CREATE TABLE IF NOT EXISTS menu(
 );
 
 INSERT INTO menu (opt,url,logo, sub,level) VALUES 
-('Dashboard', 'home', 'FaIcons.FaGripHorizontal', [], 1),
-('Today tasks', 'today', 'BsIcons.BsFan', [], 1),
-('My Scheduel', 'tasks', 'BsIcons.BsListStars', [], 1),
-('Settings', 'settings', 'BsIcons.BsFillGearFill', [], 1),
-('Support', 'support', 'FaIcons.FaEnvelope', [], 1);
+('Dashboard', 'home', 'FaIcons.FaGripHorizontal', ARRAY[], 1),
+('Today tasks', 'today', 'BsIcons.BsFan', ARRAY[], 1),
+('My Scheduel', 'tasks', 'BsIcons.BsListStars', ARRAY[], 1),
+('Settings', 'settings', 'BsIcons.BsFillGearFill', ARRAY[], 1),
+('Support', 'support', 'FaIcons.FaEnvelope', ARRAY[], 1);
+('Admin', 'admin', 'FaIcons.FaRegLifeRing', ARRAY['{sub: "Users",tree: "admin/users",level: 4}','{sub: "PLans",tree: "admin/plans",level: 3}','{sub: "Tasks",tree: "admin/tasks",level: 3}','{sub: "Menu",tree: "admin/Menu",level: 4}'], 3);
