@@ -1,5 +1,5 @@
 /* Replace with your SQL commands */
-CREATE TABLE IF NOT EXISTS user_plansz(
+CREATE TABLE IF NOT EXISTS user_plans(
     pid SERIAL PRIMARY KEY UNIQUE NOT NULL,
     uid BIGINT NOT NULL,
     pstart TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_DATE,
@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS user_plansz(
     pname VARCHAR(250) NOT NULL DEFAULT 'NEW'
 );
 
-create function createplans(userid INT, planname TEXT, planstart TIMESTAMP WITH TIME ZONE, planduration INT)
+CREATE OR REPLACE FUNCTION  createplans(userid INT, planname TEXT, planstart TIMESTAMP WITH TIME ZONE, planduration INT)
     RETURNS INT
     LANGUAGE plpgsql
     AS
