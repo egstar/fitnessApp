@@ -1,9 +1,9 @@
 /* Replace with your SQL commands */
-CREATE TABLE IF NOT EXISTS user_plans(
+CREATE TABLE IF NOT EXISTS user_plansz(
     pid SERIAL PRIMARY KEY UNIQUE NOT NULL,
     uid BIGINT NOT NULL,
     pstart TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_DATE,
-    pduration BIGINT NOT NULL
+    pduration BIGINT NOT NULL,
     pname VARCHAR(250) NOT NULL DEFAULT 'NEW'
 );
 
@@ -30,7 +30,8 @@ create function createplans(userid INT, planname TEXT, planstart TIMESTAMP WITH 
             END LOOP;
             RETURN planid;
         END;
-    $FN$;
+    $FN$
+;;
 
 
 CREATE OR REPLACE FUNCTION cpWithTasks(userid INT, planname TEXT, planstart TIMESTAMP WITH TIME ZONE, planduration INT, plantasks INT[])
@@ -57,4 +58,5 @@ CREATE OR REPLACE FUNCTION cpWithTasks(userid INT, planname TEXT, planstart TIME
             END LOOP;
             RETURN planid;
         END;
-    $FN$;
+    $FN$
+;;
