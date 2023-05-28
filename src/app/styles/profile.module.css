@@ -808,7 +808,7 @@ span.homePage{
     
     .option p {
         display:block;
-        font-size:1.5vmax;
+        font-size:1vmax;
     }
     .option {
         justify-content: center;
@@ -819,6 +819,7 @@ span.homePage{
     }
     .imageFrame::before {
         border-radius:0 0 10px 10px;
+        font-size:1vmax;
     }
     .userImage {
         width:100%;
