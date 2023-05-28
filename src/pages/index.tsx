@@ -9,6 +9,9 @@ import {useCookies} from 'react-cookie'
 import Link from 'next/link';
 import ValidateForm from '@/models/FormValidation';
 import styles from '@/app/styles/profile.module.css'
+import LoadingSpinner from '@/components/Loading';
+import useSWR from 'swr';
+
 export const uToken: string = "tfindothekmissingehiddenn"
 export const roboto = Roboto({
     variable: '--roboto-font',
@@ -16,6 +19,13 @@ export const roboto = Roboto({
     subsets: ['latin']
 })
 
+const fetcher = async(url:any) => await fetch(url, {
+  method: 'POST',
+  headers: {
+    'Content-Type':'application/json'
+  },
+  credentials: 'include'
+})
 
 const Index = () => {
   const router = useRouter()
@@ -23,7 +33,14 @@ const Index = () => {
   const [userNull, setNullUser] = useState(false)
   const [cookies, setCookie, removeCookie] = useCookies([uToken]);
   const [menu, setMenu] = useState({href: '#login',toggle: true,modal: true}) as any
+  const [isLoading, setLoading] = useState(false)
+  const {data, error} = useSWR<any>('/api/user', fetcher)
   
+  if( cookies && !data) {
+    console.log(error)
+    removeCookie(uToken)
+    
+  }
 const loginHandler = (e: any) => {
   e.preventDefault()
   ValidateForm()
@@ -33,6 +50,7 @@ const loginHandler = (e: any) => {
   }
   setUser(userInput)
   setNullUser(true)
+  setLoading(true)
 }
   useEffect(() => {
     if(userNull){
@@ -52,12 +70,14 @@ const loginHandler = (e: any) => {
         path:'/'
       })
       router.prefetch('/dash/[index]')
+      setLoading(false)
       window.location.href = '/dash/home'
       
     })
     setNullUser(false)
-  }
+    }
 }, [myUser])
+
 useEffect(() => {
 cookies! && cookies[uToken] ? setMenu({href: '/dash/home',toggle: false,modal: false,text: 'Dashboard'}) : setMenu({href: '#login',toggle: true,modal: true, text: 'Login'})
 }, [])
@@ -70,8 +90,10 @@ const signOut = () => {
     credentials: 'include'
   }).then((res) => {
     removeCookie(uToken)
+    router.replace('/')
   })
 }
+if(isLoading) return (<LoadingSpinner />)
     return (
       <main className={`${roboto.className}`}>
         <header>

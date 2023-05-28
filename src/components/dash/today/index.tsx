@@ -126,7 +126,7 @@ const Today = () => {
                 tsks.filter((tsk:any) => tsk.tstatus == 1).forEach(() => { b = b+1 })
                 entries.push({pname: pln, pid: Number(tsks[0].pid), ftsks: b, tsks: tsks})
             })
-            
+            console.log(entries)
             setData(entries)
             setLoading(false)
             } else {
@@ -154,19 +154,19 @@ const Today = () => {
             <div className={`accordion ${styles.pagesContainer_1}`} id="userPlans">
             {
                 data
-                ? data.map((pln: any) => {
-                    const tskPercentage: number = parseFloat((Number(pln.tsks.length) * Number(pln.ftsks / 100 ) * 100).toFixed(2));
+                ? data.map((pln: any, index: number) => {
+                    const tskPercentage: number = parseFloat((Number(pln.ftsks) / (Number(pln.tsks.length)) * 100).toFixed(2));
                     return (
                     <div key={pln.pid} className={`accordion-item`}>
                         <h2 className="accordion-header" id={`userPlans-head${pln.pid}`} style={{textAlign:'center'}}>
-                        <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target={`#userPlans${pln.pid}`} aria-expanded="true" aria-controls={`userPlans${pln.pid}`}>
+                        <button className="accordion-button" type="button" style={{boxShadow:'none',fontSize: '1.7vw', height:'max-content',textAlign:'center'}} data-bs-toggle="collapse" data-bs-target={`#userPlans${pln.pid}`} aria-expanded="true" aria-controls={`userPlans${pln.pid}`}>
                             <span className={`${styles.userPlan}`}>
-                                <h1>{pln.pname + ' Plan'}</h1>
+                                <span  style={{fontSize: '1.9vw'}}>{pln.pname + ' Plan'}</span>
                                 <span className={`${styles.tasksPercentage}`}>{tskPercentage} %</span>
                             </span>
                         </button>
                         </h2>
-                        <div id={`userPlans${pln.pid}`} className="accordion-collapse collapse show" aria-labelledby={`userPlans-head${pln.pid}`}>
+                        <div id={`userPlans${pln.pid}`} className={`accordion-collapse collapse ${index == 0 ? 'show' : null}`} aria-labelledby={`userPlans-head${pln.pid}`} data-bs-parent="#userPlans">
                             <div className={`accordion-body`} style={{background:'#b69ca9',borderTop:'3px solid #583b63'}}>
                                 <div className={`${styles.TodayTasks}`}>
                                 {

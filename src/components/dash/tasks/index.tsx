@@ -35,7 +35,7 @@ if(!plans) return (<></>)
                         return (
                             <div key={'plan'+pl.plan} className={`accordion-item`} >
                                 <h2 className="accordion-header" id={`userPlans-head${pl.plan}`} style={{textAlign:'center',justifyContent:'center', alignItems:'center'}}>
-                                <button className="accordion-button" style={{height:'1rem',textAlign:'center'}} type="button" data-bs-toggle="collapse" data-bs-target={`#userPlans${pl.plan}`} aria-expanded={index ==0 ? "true" : 'false'} aria-controls={`userPlans${pl.plan}`}>
+                                <button className="accordion-button" style={{fontSize: '1.7vw', height:'1rem',textAlign:'center'}} type="button" data-bs-toggle="collapse" data-bs-target={`#userPlans${pl.plan}`} aria-expanded={index ==0 ? "true" : 'false'} aria-controls={`userPlans${pl.plan}`}>
                                     {pl.plan + ' Plan'}
                                 </button>
                                 </h2>

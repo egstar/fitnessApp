@@ -163,7 +163,7 @@
     justify-content: center;
     align-items: center;
     width:100%;
-    height:max-content;
+    height:50%;
     padding:.5rem 0 1.5rem 0;
     background: linear-gradient(from 90deg, #ecb0a060,  #583b6349 );
     background-attachment: fixed;
@@ -190,21 +190,38 @@
     width:100%;
     height:100%;
 }
-.uname {
-    position: absolute;
+.imageFrame::before {
+    position:absolute;
     display:flex;
+    width:90%;
+    content: attr(data-user);
+    height:2vh;
+    padding:.5v 0;
+    border-radius:0 0 13px 13px;
+    background:rgba(62, 3, 65, 0.527);
+    z-index:999;
+    align-self:flex-end;
+    justify-content: center;
+    align-items: center;
+    font-size:1.5vmax;
+
+}
+.uname {
+    position: relative;
+    display:none;
     flex-direction: column;
     flex-wrap:nowrap;
     justify-content: center;
     align-items:center;
-    bottom:1.4rem;
     padding:.5rem 0;
-    width:90%;
+    width:100%;
     border-radius:0 0 20px 20px;
     background:rgba(62, 3, 65, 0.527);
     margin:auto auto;
-    font-size:1.5rem;
+    font-size:2vw;
+    top:-4.5vw;
 }
+
 .userName {
     display:flex;
     position:relative;
@@ -216,6 +233,7 @@
     flex-direction: row;
     text-overflow: ellipsis;
     overflow:hidden;
+    margin-top:.5rem;
 }
 .userTools {
     width:100%;
@@ -229,6 +247,7 @@
     margin:auto auto;
     text-align:center;
     font-size:.75rem;
+    
 }
 .usersInfo {
     padding: 0 .14rem;
@@ -242,6 +261,7 @@
     align-items:center;
     margin:.1rem auto;
     text-align:center;
+    position:relative;
 }
 .usersInfo i {
     font-size: .75rem;
@@ -272,6 +292,7 @@
 }
 .sideMenu {
     overflow-y:auto;
+
 }
 .sideBar ul {
     left:0px;
@@ -407,7 +428,6 @@ span.homePage{
     border-radius:10px;
     background:rgb(185, 185, 185);
     color:rgb(87, 141, 190);
-    user-select: none;
     border-top:3px solid #583b63;
 }
 .tableContainer {
@@ -571,7 +591,6 @@ span.homePage{
     box-shadow:0px 0px .5rem rgba(226, 226, 223, 0.397);
     border-radius:10px;
     color:rgb(87, 141, 190);
-    user-select: none;
     width:100%;
     background: #b69ca9;
 }
@@ -793,6 +812,9 @@ span.homePage{
         justify-content: center;
         font-size:2rem;
         height: 3rem;
+    }
+    .imageFrame::before {
+        border-radius:0 0 10px 10px;
     }
     .userImage {
         width:100%;

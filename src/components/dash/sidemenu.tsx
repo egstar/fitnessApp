@@ -18,7 +18,7 @@ const SideMenu = ({index, setIndex, setData, data, setPage, isActive, setActive,
     return (
         <div className={styles.sideBar}>
                 <div className={styles.userTop}>
-                    <div className={styles.imageFrame}>
+                    <div className={styles.imageFrame} data-user={isUser? isUser.fname + ' ' + isUser.lname : null}>
                         <Image className={styles.userImage}
                         src="/assets/imgs/usr.png"
                         width={640}
@@ -28,7 +28,6 @@ const SideMenu = ({index, setIndex, setData, data, setPage, isActive, setActive,
                         <span className={styles.uname}><div>{isUser? isUser.fname + ' ' + isUser.lname : null}</div></span>
                     </div>
                     <div className={styles.userName}>
-                        
                         <div className={styles.userTools}>
                             <span className={styles.usersInfo}>
                                 <FaIcons.FaRegChartBar className={styles.infoLogo}/>
@@ -40,7 +39,6 @@ const SideMenu = ({index, setIndex, setData, data, setPage, isActive, setActive,
                             </span>
                         </div>
                     </div>
-                    <div className={styles.alterUserName}>{String(isUser.fname+' '+isUser.lname).split(' ').map((elm):string => elm[0]).join('.')}</div>
                 </div>
 
                 <ul className={styles.sideMenu}>
