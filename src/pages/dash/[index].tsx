@@ -8,6 +8,8 @@ import { roboto } from '@/pages/index';
 import { User } from '@/data/types';
 import DashPage from '@/components/dash/routepage';
 import SideMenu from '@/components/dash/sidemenu';
+import { useCookies } from 'react-cookie';
+import { uToken } from '../_app';
 
 
 export default function Profile() {
@@ -20,6 +22,8 @@ export default function Profile() {
     const [data, setData] = useState([])
     const [PageInfo, setPage] = useState({} as PgInfo)
     const [isActive, setActive] = useState(0)
+    const [cookies, setCookie, removeCookie] = useCookies([uToken])
+
     
     useEffect(() => {
         if(!isLogged){
@@ -31,7 +35,10 @@ export default function Profile() {
                 credentials: 'include'
             })
             .then((res) => {
-                if(res.status != 200 ) { window.location.href= '/'}
+                if(res.status != 200 ) { 
+                    removeCookie(uToken)
+                    router.replace('/')
+                }
                 return res.json()
             }).then((data) => {
                 if(isUser != data) setUser(data)

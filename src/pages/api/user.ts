@@ -13,7 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const userSession: uSession = await getSession(userLogged!)
 
     if(!userSession) {
-       return res.status(400).json('Error, Access denied')
+        throw new Error('Error, Access denied')
     }
     const loggedUser: User = await getUserById(userSession.uid)
     return res.status(200).json(loggedUser)

@@ -17,7 +17,9 @@ const DashNav = ({isUser}: any) => {
             credentials: 'include',
             body: JSON.stringify({uid: isUser.uid})
         }).then((res) => {
-            removeCookies(uToken)
+            removeCookies(uToken, {
+                path: '/'
+              })
             router.replace('/')
         })
     }

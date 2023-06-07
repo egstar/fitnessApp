@@ -13,14 +13,23 @@ import LoadingSpinner from '../Loading';
 
 const SideMenu = ({index, setIndex, setData, data, setPage, isActive, setActive, isUser, tabHandler}: any) => {
     const [isLoading, setLoading] = useState(false)
+    const [usrImage, setUsrImage] = useState('') as any
+    useEffect(()=> {
+        const userImage = isUser.img ? '/assets/imgs/users/'+isUser.img : '/assets/imgs/users/usr.png'
+        const imgBlob = new Blob([userImage])
+        const usrImg = URL.createObjectURL(imgBlob)
+        setUsrImage(userImage)
+    }, [])
     
+
     if(isLoading) return (<LoadingSpinner />)
+    
     return (
         <div className={styles.sideBar}>
                 <div className={styles.userTop}>
                     <div className={styles.imageFrame} data-user={isUser? isUser.fname + ' ' + isUser.lname : null}>
                         <Image className={styles.userImage}
-                        src="/assets/imgs/usr.png"
+                        src={usrImage}
                         width={640}
                         height={640}
                         alt={isUser? isUser.fname + ' ' + isUser.lname : 'Profile Picture'}

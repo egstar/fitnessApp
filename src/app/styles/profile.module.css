@@ -190,6 +190,31 @@
     width:100%;
     height:100%;
 }
+.settingsImageFrame {
+    display:flex;
+    justify-content: center;
+    align-items:center;
+    height:max-content;
+    width:90%;
+    margin:auto auto;
+}
+.settingsUserImage {
+    display:flex;
+    align-self: center;
+    text-align:center;
+    justify-content: center;
+    align-items: center;
+    border-radius:10%;
+    filter:drop-shadow(0 0 .35rem rgb(129, 148, 155));
+    max-width:15rem;
+    min-width:5rem;
+    min-height:100%;
+    max-height: 15rem;
+    margin:.5rem .5rem;
+}
+.fileSelect {
+    visibility: hidden;
+}
 .imageFrame::before {
     position:absolute;
     display:flex;
@@ -543,7 +568,6 @@ span.homePage{
     top:0;
     font-size:.5em;
     color:#583b63;
-    
 }
 .planChoices .planTail {
     margin:auto auto;
@@ -577,6 +601,10 @@ span.homePage{
 }
 .pagesContainer_2{
     width:calc(100% / 2 - 1rem);
+}
+.pagesContainer_2 > * {
+    margin:auto auto;
+    width:98%;
 }
 .TodayTasks {
     width:100%;
@@ -740,12 +768,61 @@ span.homePage{
     border:1px solid lightsalmon;
     box-shadow: 0px 0px .75rem lightgray;
     max-width:40%;
-
+}
+.planLine {
+    left:0.5rem;
+    text-overflow: ellipse;
+    justify-content: center;
+    text-align: left;
 }
 
-
-
-
+.planLineTools {
+    display:flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    align-items: center;
+}
+.planIcons{
+    filter:drop-shadow(0px 0px 1px white);
+}
+.planIcons:hover {
+    cursor: pointer;
+    opacity:.6;
+}
+ul.userPlanList {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    flex-wrap:nowrap;
+    margin:auto auto;
+    padding:0;
+    left:0;
+    width:95%;
+}
+.userPlanList > *:hover {
+    background:rgb(155, 178, 212);
+    color:white;
+    cursor:pointer;
+}
+.userPlanListActive {
+    background:rgb(92, 149, 233);
+    color:white;
+}
+.planList {
+    padding:0;
+    left:0;
+    list-style:none;
+    align-self:center;
+    align-items:center;
+    justify-content:flex-start;
+    display:flex;
+    border-top: 1px solid lightgray;
+    border-bottom: 1px solid lightgray;
+    width:100%;
+    margin:0.2rem 0;
+    box-shadow:0 0 .25rem lightgray;
+}
 
 .animatedText {
     flex-direction: row;
@@ -807,8 +884,10 @@ span.homePage{
     }
     
     .option p {
-        display:block;
+        display:flex;
         font-size:1vmax;
+        padding:0;
+        margin:auto auto;
     }
     .option {
         justify-content: center;

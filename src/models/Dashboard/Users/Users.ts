@@ -30,7 +30,7 @@ export const getPass = async(uname: string): Promise<string> => {
 export const getUser = async(uname: string): Promise<User> => {
     try {
         const conn = await DbConn.connect();
-        const sQuery = `SELECT id,uname,fname,lname,email,regdate,lid from users INNER JOIN user_levels ON id=uid WHERE uname=$1 OR email=$1`
+        const sQuery = `SELECT id,img,uname,fname,lname,email,regdate,lid from users INNER JOIN user_levels ON id=uid WHERE uname=$1 OR email=$1`
         const result = await conn.query(sQuery, [uname.toLowerCase()])
         conn.release();
         
@@ -44,7 +44,7 @@ export const getUser = async(uname: string): Promise<User> => {
 export const getUserById = async (id: number): Promise<User> => {
     try {
         const conn = await DbConn.connect();
-        const sQuery = `SELECT uid,uname,fname,lname,email,regdate,lid,levels.level from users INNER JOIN user_levels ON users.id=uid INNER JOIN levels on lid=levels.id WHERE uid=$1`
+        const sQuery = `SELECT uid,img,uname,fname,lname,email,regdate,lid,levels.level from users INNER JOIN user_levels ON users.id=uid INNER JOIN levels on lid=levels.id WHERE uid=$1`
         const result = await conn.query(sQuery, [id])
         conn.release();
         

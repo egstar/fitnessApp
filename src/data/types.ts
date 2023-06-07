@@ -17,6 +17,7 @@ export type PgInfo = {
 export type User = {
     id?: number,
     uname?: string,
+    img?: string,
     fname?: string,
     lname?: string,
     email?: string,

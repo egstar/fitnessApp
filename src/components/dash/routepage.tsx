@@ -5,6 +5,7 @@ import TopNav from '@/components/dash/topnav';
 import Today from '@/components/dash/today';
 import Plans from '@/components/dash/tasks';
 import { CreaetPlan } from './plans';
+import { Settings } from './Settings';
 
 export default function DashPage({PageInfo}: any) {
     
@@ -20,7 +21,7 @@ export default function DashPage({PageInfo}: any) {
                         : PageInfo.tree == 'subs'
                             ? (<CreaetPlan />)
                             : PageInfo.tree == 'settings'
-                                ? (<>Settings</>)
+                                ? (<Settings />)
                                 : PageInfo.tree == 'support'
                                     ? (<>Support</>)
                                     : PageInfo.tree == 'mail'

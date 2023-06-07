@@ -5,12 +5,13 @@ import * as faIcons from 'react-icons/fa';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router'
 import { Roboto } from '@next/font/google'
-import {useCookies} from 'react-cookie'
+
 import Link from 'next/link';
 import ValidateForm from '@/models/FormValidation';
 import styles from '@/app/styles/profile.module.css'
 import LoadingSpinner from '@/components/Loading';
-import useSWR from 'swr';
+import { useCookies } from 'react-cookie';
+
 
 export const uToken: string = "tfindothekmissingehiddenn"
 export const roboto = Roboto({
@@ -19,28 +20,15 @@ export const roboto = Roboto({
     subsets: ['latin']
 })
 
-const fetcher = async(url:any) => await fetch(url, {
-  method: 'POST',
-  headers: {
-    'Content-Type':'application/json'
-  },
-  credentials: 'include'
-})
 
 const Index = () => {
   const router = useRouter()
   const [myUser, setUser] = useState({})
   const [userNull, setNullUser] = useState(false)
-  const [cookies, setCookie, removeCookie] = useCookies([uToken]);
   const [menu, setMenu] = useState({href: '#login',toggle: true,modal: true}) as any
   const [isLoading, setLoading] = useState(false)
-  const {data, error} = useSWR<any>('/api/user', fetcher)
-  
-  if( cookies && !data) {
-    console.log(error)
-    removeCookie(uToken)
-    
-  }
+  const [cookies, setCookie, removeCookie] = useCookies([uToken])
+
 const loginHandler = (e: any) => {
   e.preventDefault()
   ValidateForm()
@@ -70,9 +58,9 @@ const loginHandler = (e: any) => {
         path:'/'
       })
       router.prefetch('/dash/[index]')
-      setLoading(false)
-      window.location.href = '/dash/home'
       
+      window.location.href = '/dash/home'
+      setLoading(false)
     })
     setNullUser(false)
     }
@@ -81,17 +69,21 @@ const loginHandler = (e: any) => {
 useEffect(() => {
 cookies! && cookies[uToken] ? setMenu({href: '/dash/home',toggle: false,modal: false,text: 'Dashboard'}) : setMenu({href: '#login',toggle: true,modal: true, text: 'Login'})
 }, [])
-const signOut = () => {
-  fetch('/api/signout', {
+const signOut = async() => {
+  setLoading(true)
+  await fetch('/api/signout', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     credentials: 'include'
-  }).then((res) => {
-    removeCookie(uToken)
-    router.replace('/')
+  }).then(() => {
+    removeCookie(uToken, {
+      path: '/'
+    })
   })
+  setLoading(false)
+  router.reload()
 }
 if(isLoading) return (<LoadingSpinner />)
     return (
@@ -268,7 +260,7 @@ if(isLoading) return (<LoadingSpinner />)
 
                                     </div>
                                 </div>)
-                                : (<div className={styles.signOut}>You can access your <Link href={'/dash/home'}> Dashboard</Link> or <Link href="#signout" onClick={signOut}>Signout</Link></div>)
+                                : (<div className={styles.signsOut}>You can access your <Link href={'/dash/home'}> Dashboard</Link> or <Link href="#signout" onClick={signOut}>Signout</Link></div>)
                             }
                         </div>
                     </div>
