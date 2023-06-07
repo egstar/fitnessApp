@@ -14,14 +14,17 @@ import LoadingSpinner from '../Loading';
 const SideMenu = ({index, setIndex, setData, data, setPage, isActive, setActive, isUser, tabHandler}: any) => {
     const [isLoading, setLoading] = useState(false)
     const [usrImage, setUsrImage] = useState('') as any
-    useEffect(()=> {
+    const getImage = async()=> {
         const userImage = isUser.img ? '/assets/imgs/users/'+isUser.img : '/assets/imgs/users/usr.png'
-        const imgBlob = new Blob([userImage])
+        const file = await fetch(userImage)
+        const imgBlob = await file.blob()
         const usrImg = URL.createObjectURL(imgBlob)
-        setUsrImage(userImage)
-    }, [])
-    
+        setUsrImage(usrImg)
+    }
 
+    useEffect(() => {
+        getImage()
+    }, [])
     if(isLoading) return (<LoadingSpinner />)
     
     return (

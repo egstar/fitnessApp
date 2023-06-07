@@ -18,11 +18,16 @@ export const Settings = () => {
     const hiddenInput = useRef() as any
     const [usrImage, setUsrImage] = useState('') as any
 
-    useEffect(()=> {
-        const userImage = user.img ? '/assets/imgs/users/'+user.img : '/assets/imgs/users/usr.png'
-        const imgBlob = new Blob([userImage])
-        const usrImg = URL.createObjectURL(imgBlob)
-        setUsrImage(userImage)
+    const getImage = async()=> {
+        const userImage: string = user.img ? '/assets/imgs/users/'+user.img : '/assets/imgs/users/usr.png'
+        const file = await fetch(userImage)
+        const imgBlob = await file.blob()
+        const UsrImg = URL.createObjectURL(imgBlob)
+        setUsrImage(UsrImg)
+    }
+
+    useEffect(() => {
+        getImage()
     }, [])
 
     function getElm(elm: string) {
