@@ -15,23 +15,26 @@ export default async function handler(req:NextApiRequest, res:NextApiResponse){
         res.status(403).json({error:'Session has been expired, please relogin'})
     }
     const {uid,fname,lname,email,upass,newpass,img,newImage} = req.body 
-    console.log(req.body)
-    if(newpass){
-        if(!await verifyPass(email,upass)) res.status(403).json({error: 'Wrong password'})
-        const cryptoSalt = crypto.randomBytes(16).toString('hex')
-        const npass = crypto.pbkdf2Sync(newpass, cryptoSalt, 1000, 64, 'sha512').toString('hex')
-        const uName= await updatePassword(uid,npass)
-        if(!uName) res.status(403).json({error:'Cannot update user info, please correct your info and try again'})
-        res.status(200).json({message: `${uName}'s password has been updated`})
-    }
     if(newImage){
         const uName = await updateImage(uid,img)
         if(!uName) res.status(403).json({error: 'Cannot update user image, please try again'})
         res.status(200).json({message: `${uName}'s image has been updated`})
     }
+    if(newpass){
+        const vPass = await verifyPass(email,upass)
+        if(!vPass) {res.status(403).json({error: 'Wrong password'})}
+        const cryptoSalt = crypto.randomBytes(16).toString('hex')
+        const npass = crypto.pbkdf2Sync(newpass, cryptoSalt, 1000, 64, 'sha512').toString('hex')
+        const passEncrypt = npass+"b0rh4ms0l1m4n"+cryptoSalt
+        const uName= await updatePassword(uid,passEncrypt)
+        if(!uName) res.status(403).json({error:'Cannot update user info, please correct your info and try again'})
+    }
     if(fname || lname || email){
         const userInfo = await getUserById(uid)
         if(!userInfo) res.status(403).json({error:"Access is denied."})
+        if(userInfo.fname == fname && userInfo.lname == lname && userInfo.email == email) {
+            res.status(203).json({error: 'No thing to update'})
+        }
         if(userInfo.fname != fname || userInfo.lname != lname || userInfo.email != email) {
             UpdateInfo(uid,fname,lname,email)
             res.status(200).json({message: `User ${userInfo.uname} info has been updated`})

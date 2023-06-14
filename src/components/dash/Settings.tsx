@@ -37,11 +37,8 @@ export const Settings = () => {
         const imgBlob = await file.blob()
         const UsrImage = URL.createObjectURL(imgBlob)
         setUsrImage(UsrImage)
+        setNewImage(false)
     }
-
-    useEffect(() => {
-        getImage()
-    }, [user,usrImage])
 
     function getElm(elm: string) {
         const elms: any = {
@@ -68,6 +65,7 @@ export const Settings = () => {
             return res.json()
         }).then((data) => {
             setUser(data)
+            getImage()
         })
         fetch('/api/plans', {
             method: 'POST',
@@ -111,10 +109,10 @@ export const Settings = () => {
                 if(res.status !== 200) console.log('Error')
                 return res.json()
             }).then((data: any) => {
-                console.log(data)
                 setUsrImg(base64Image)
             })
         }
+        getImage()
         setNewImage(false)
     }, [base64Image,newImage])
 
@@ -134,14 +132,18 @@ export const Settings = () => {
         e.preventDefault()
         const formData = new FormData(e.currentTarget)
         formData.append('uid', user.uid)
-        console.log(formData.forEach((a:any, b:any) => {return {b: a}}))
+        let bodyData = {}
+        formData.forEach((a:any,b:any) => {
+            bodyData = {...bodyData, [b]: a}
+        })
+        console.log(bodyData)
         fetch('/api/userinfo', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             credentials: 'include',
-            body: JSON.stringify(formData.forEach((a:any, b:any) => ({b: a})))
+            body: JSON.stringify({...bodyData})
         }).then((res: any) => {
             if(res.status !== 200) console.log('Error')
             return res.json()
