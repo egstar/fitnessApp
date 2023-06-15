@@ -106,9 +106,9 @@ export default function Profile() {
     if(gotMenu == false || !isUser || !index) return (<LoadingSpinner />)
     return(
         <main className={`${styles.main} ${roboto.className}`}>
-            <DashNav isUser={isUser as unknown as any} />
-            <SideMenu isUser={isUser as unknown as any} tabHandler={tabHandler} index={index} setActive={setActive} isActive={isActive} setIndex={setIndex} setPage={setPage} PageInfo={PageInfo} data={data} setData={setData} />
-            <DashPage PageInfo={PageInfo} />
+            <DashNav isUser={isUser} />
+            <SideMenu setUser={setUser} isUser={isUser as unknown as any} tabHandler={tabHandler} index={index} setActive={setActive} isActive={isActive} setIndex={setIndex} setPage={setPage} PageInfo={PageInfo} data={data} setData={setData} />
+            <DashPage PageInfo={PageInfo} isUser={isUser} setUser={setUser} />
         </main>
     )
 }

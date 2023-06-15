@@ -18,22 +18,27 @@ export default async function handler(req:NextApiRequest, res:NextApiResponse){
     if(newImage){
         const uName = await updateImage(uid,img)
         if(!uName) res.status(403).json({error: 'Cannot update user image, please try again'})
-        res.status(200).json({message: `${uName}'s image has been updated`})
+        res.status(200).json({message: `${uName!.uname}'s image has been updated`})
     }
-    if(newpass){
-        const vPass = await verifyPass(email,upass)
-        if(!vPass) {res.status(403).json({error: 'Wrong password'})}
-        const cryptoSalt = crypto.randomBytes(16).toString('hex')
-        const npass = crypto.pbkdf2Sync(newpass, cryptoSalt, 1000, 64, 'sha512').toString('hex')
-        const passEncrypt = npass+"b0rh4ms0l1m4n"+cryptoSalt
-        const uName= await updatePassword(uid,passEncrypt)
-        if(!uName) res.status(403).json({error:'Cannot update user info, please correct your info and try again'})
-    }
+    
     if(fname || lname || email){
         const userInfo = await getUserById(uid)
         if(!userInfo) res.status(403).json({error:"Access is denied."})
+        if(newpass){
+            const vPass = await verifyPass(email,upass)
+            if(!vPass) {res.status(403).json({error: 'Wrong password'})}
+            const cryptoSalt = crypto.randomBytes(16).toString('hex')
+            const npass = crypto.pbkdf2Sync(newpass, cryptoSalt, 1000, 64, 'sha512').toString('hex')
+            const passEncrypt = npass+"b0rh4ms0l1m4n"+cryptoSalt
+            const uName= await updatePassword(uid,passEncrypt)
+            if(!uName) res.status(403).json({error:'Cannot update user info, please correct your info and try again'})
+        }
         if(userInfo.fname == fname && userInfo.lname == lname && userInfo.email == email) {
-            res.status(203).json({error: 'No thing to update'})
+            if(newpass) {
+                res.status(200).json({message: 'Password has been changed'})
+            } else {
+                res.status(403).json({error: 'No thing to update'})
+            }
         }
         if(userInfo.fname != fname || userInfo.lname != lname || userInfo.email != email) {
             UpdateInfo(uid,fname,lname,email)

@@ -7,7 +7,7 @@ import Plans from '@/components/dash/tasks';
 import { CreaetPlan } from './plans';
 import { Settings } from './Settings';
 
-export default function DashPage({PageInfo}: any) {
+export default function DashPage({PageInfo, isUser, setUser}: any) {
     
     return (
         <div className={styles.pages}>
@@ -21,7 +21,7 @@ export default function DashPage({PageInfo}: any) {
                         : PageInfo.tree == 'subs'
                             ? (<CreaetPlan />)
                             : PageInfo.tree == 'settings'
-                                ? (<Settings />)
+                                ? (<Settings isUser={isUser} setUser={setUser}/>)
                                 : PageInfo.tree == 'support'
                                     ? (<>Support</>)
                                     : PageInfo.tree == 'mail'

@@ -1,5 +1,6 @@
 import styles from '@/app/styles/profile.module.css'
 import { uToken } from '@/pages';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCookies } from 'react-cookie';
 import * as FaIcons from 'react-icons/fa';
@@ -35,7 +36,7 @@ const DashNav = ({isUser}: any) => {
                 </div>
                 <div className={styles.navOptions}>
                         <div className={styles.userButtons}>
-                            <p className={styles.userOptions}><FaIcons.FaCog /></p>
+                            <Link href={`/dash/settings`} className={styles.userOptions}><FaIcons.FaCog /></Link>
                             <p className={styles.signOut} onClick={(e) => SignOut(e)}><FaIcons.FaPowerOff /></p>
                         </div>
                 </div>
