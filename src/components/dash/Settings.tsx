@@ -25,6 +25,8 @@ export const Settings = ({isUser, setUser}: any) => {
     const [err, setError] = useState(false)
     const [updateImage, setUpdateImage] = useState(false)
     const hiddenInput = useRef() as any
+    const newPass1 = useRef() as any
+    const newPass2 = useRef() as any
 
     // Change image file to base64
     async function getBase64(file: File) {
@@ -33,7 +35,7 @@ export const Settings = ({isUser, setUser}: any) => {
             setBase64Image(reader.result)
         };
         reader.onerror = function (error) {
-            console.log('Error: ', error);
+            setErrorMessage({msg: 'Error, cannot handle the file', atype: 'alert-danger'})
         };
         reader.readAsDataURL(file);
     }
@@ -117,6 +119,16 @@ export const Settings = ({isUser, setUser}: any) => {
     function formUpdate(e: any) {
         const entryData = {...info}
         entryData[e.currentTarget.id] = e.currentTarget.value
+        if(chPass) {
+            if(newPass1.current.value != newPass2.current.value){
+                setError(true)
+                newPass1.current.classList.add('is-invalid')
+            } else {
+                setError(false)
+                newPass1.current.classList.remove('is-invalid')
+            }
+        }
+        ValidateForm()
         setInfo(entryData)
     }
     // Password toggler checker
@@ -130,37 +142,41 @@ export const Settings = ({isUser, setUser}: any) => {
     // Form submittion handler
     function submitForm(e: any) {
         e.preventDefault()
-        ValidateForm()        
-        const formData = new FormData(e.currentTarget)
-        formData.append('uid', isUser.uid)
+        
+        ValidateForm()
 
-        let bodyData = {}
-        formData.forEach((a:any,b:any) => {
-            bodyData = {...bodyData, [b]: a}
-        })
+        if(e.currentTarget.classList.contains('was-validated')){
+            const formData = new FormData(e.currentTarget)
+            formData.append('uid', isUser.uid)
 
-        fetch('/api/userinfo', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include',
-            body: JSON.stringify({...bodyData})
-        }).then((res: any) => {
-            if(res.status !== 200) setError(true)
-            return res.json()
-        }).then((data) => {
-            
-            if(data.message) {
-                setErrorMessage({msg: data.message , atype: 'alert-success'})
-                setTimeout(() => setErrorMessage(), 5000)
-            }
-            if(data.error) {
-                setErrorMessage({msg: data.error , atype: 'alert-danger'})
-                setTimeout(() => setErrorMessage(), 5000)
-            }
-            
-        })
+            let bodyData = {}
+            formData.forEach((a:any,b:any) => {
+                bodyData = {...bodyData, [b]: a}
+            })
+
+            fetch('/api/userinfo', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify({...bodyData})
+            }).then((res: any) => {
+                if(res.status !== 200) setError(true)
+                return res.json()
+            }).then((data) => {
+                
+                if(data.message) {
+                    setErrorMessage({msg: data.message , atype: 'alert-success'})
+                    setTimeout(() => setErrorMessage(), 5000)
+                }
+                if(data.error) {
+                    setErrorMessage({msg: data.error , atype: 'alert-danger'})
+                    setTimeout(() => setErrorMessage(), 5000)
+                }
+                
+            })
+        }
     }
     
     if(isLoading) return(<LoadingSpinner />)
@@ -194,10 +210,16 @@ export const Settings = ({isUser, setUser}: any) => {
                         <div className={`form-floating`}>
                             <input className={`form-control form-control-sm`} onChange={formUpdate} placeholder={getElm('fname')} type="text" id={'fname'} name={'fname'} defaultValue={isUser.fname} style={{boxShadow:'none', outline:'none', background:'transparent',border:'0 0 0 1px solid white'}} autoComplete="disabled" required />
                             <label className={`input-label`} htmlFor={'fname'}>{getElm('fname')}</label>
+                            <div className="invalid-feedback">
+                                Please provide a valid name.
+                            </div>
                         </div>
                         <div className={`form-floating`}>
                             <input className={`form-control form-control-sm`} onChange={formUpdate} placeholder={getElm('lname')} type="text" id={'lname'} name={'lname'} defaultValue={isUser.lname} style={{boxShadow:'none', outline:'none', background:'transparent',border:'0 0 0 1px solid white'}} autoComplete="disabled" required />
                             <label className={`input-label`} htmlFor={'lname'}>{getElm('lname')}</label>
+                            <div className="invalid-feedback">
+                                Please provide a valid name.
+                            </div>
                         </div>
                     </div>
                     </div>
@@ -205,6 +227,9 @@ export const Settings = ({isUser, setUser}: any) => {
                         <div className={`form-floating`}>
                             <input className={`form-control form-control-sm`} onChange={formUpdate} placeholder={getElm('email')} type="text" id={'email'} name={'email'} defaultValue={isUser.email} style={{boxShadow:'none', outline:'none', background:'transparent',border:'0 0 0 1px solid white'}} autoComplete="disabled" required />
                             <label className={`input-label`} htmlFor={'email'}>{getElm('email')}</label>
+                            <div className="invalid-feedback">
+                                Please provide a valid Email address.
+                            </div>
                         </div>
                     </div>
                     <div className={styles.pagesContainer_1}>
@@ -218,18 +243,27 @@ export const Settings = ({isUser, setUser}: any) => {
                             chPass ?
                             (<><div className={`input-group`}>
                                 <div className={`form-floating`}>
-                                    <input className={`form-control form-control-sm`} onChange={formUpdate} placeholder={'Old Password'} type="password" id={'upass'} name={'upass'} defaultValue={`*******`} style={{boxShadow:'none', outline:'none', background:'transparent',borderBottom:'1px solid white'}} required/>
+                                    <input className={`form-control form-control-sm `} onChange={formUpdate} placeholder={'Old Password'} type="password" id={'upass'} name={'upass'} style={{boxShadow:'none', outline:'none', background:'transparent',borderBottom:'1px solid white'}} required/>
                                     <label className={`input-label`} htmlFor={'upass'}>{'Old Password'}</label>
+                                    <div className="invalid-feedback">
+                                        Enter your old password.
+                                    </div>
                                 </div>
                             </div>
                             <div className={`input-group`}>
                                 <div className={`form-floating`}>
-                                    <input className={`form-control form-control-sm`} onChange={formUpdate} placeholder={'New Password'} type="password" id={'newpass'} name={'newpass'} defaultValue={`*******`} style={{boxShadow:'none', outline:'none', background:'transparent',borderBottom:'1px solid white'}} required/>
+                                    <input ref={newPass1} className={`form-control form-control-sm`} onChange={formUpdate} placeholder={'New Password'} type="password" id={'newpass'} name={'newpass'} style={{boxShadow:'none', outline:'none', background:'transparent',borderBottom:'1px solid white'}} required/>
                                     <label className={`input-label`} htmlFor={'newpass'}>{'New Password'}</label>
+                                    <div className="invalid-feedback">
+                                        {err ? `Password does not match` : `Enter your new password.`}
+                                    </div>
                                 </div>
                                 <div className={`form-floating`}>
-                                    <input className={`form-control form-control-sm`} onChange={formUpdate} placeholder={'Confirm new password'} type="password" id={'pass2'} name={'pass2'} defaultValue={`*******`} style={{boxShadow:'none', outline:'none', background:'transparent',borderBottom:'1px solid white'}} required/>
+                                    <input ref={newPass2} className={`form-control form-control-sm`} onChange={formUpdate} placeholder={'Confirm new password'} type="password" id={'pass2'} name={'pass2'}  style={{boxShadow:'none', outline:'none', background:'transparent',borderBottom:'1px solid white'}} required/>
                                     <label className={`input-label`} htmlFor={'pass2'}>{'Confirm password'}</label>
+                                    <div className="invalid-feedback">
+                                        Confirm your new password.
+                                    </div>
                                 </div>
                             </div></>)
                             : null

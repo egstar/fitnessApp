@@ -41,8 +41,12 @@ export default async function handler(req:NextApiRequest, res:NextApiResponse){
             }
         }
         if(userInfo.fname != fname || userInfo.lname != lname || userInfo.email != email) {
-            UpdateInfo(uid,fname,lname,email)
-            res.status(200).json({message: `User ${userInfo.uname} info has been updated`})
+            const userUpdate = await UpdateInfo(uid,fname,lname,email)
+            if(!userUpdate) {
+                res.status(403).json({error: `Email address already registered, please try again`})
+            } else {
+                res.status(200).json({message: `User ${userInfo.uname} info has been updated`})
+            }
         }
     }
 }

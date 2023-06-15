@@ -1,3 +1,4 @@
+
 .main{
     display:grid;
     grid-template-areas: 
@@ -116,6 +117,7 @@
 .userOptions:hover {
     opacity:1;
     cursor:pointer;
+    color:white;
     
 }
 .signOut:hover {

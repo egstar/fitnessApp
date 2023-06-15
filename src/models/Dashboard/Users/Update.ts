@@ -2,7 +2,7 @@ import DbConn from "@/data/Database"
 import { User } from "@/data/types"
 
 
-export const UpdateInfo = async(uid: number, fname: string, lname: string, email: string): Promise<User|undefined> => {
+export const UpdateInfo = async(uid: number, fname: string, lname: string, email: string): Promise<User|undefined|Error> => {
     try {
         const conn = await DbConn.connect()
         const sQuery = `UPDATE users SET (fname,lname,email)=($1,$2,$3) WHERE id=$4 RETURNING uname,fname,lname,email`
@@ -11,7 +11,7 @@ export const UpdateInfo = async(uid: number, fname: string, lname: string, email
         if(result.rows.length) return result.rows[0] as User
         return
     } catch(e) {
-        throw new Error(`Error, ${e}`)
+        throw new Error(`${e}`)
     }
 }
 export const updatePassword = async(uid: number, newPass: string): Promise<User|undefined> => {
