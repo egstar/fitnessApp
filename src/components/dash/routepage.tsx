@@ -6,6 +6,7 @@ import Today from '@/components/dash/today';
 import Plans from '@/components/dash/tasks';
 import { CreaetPlan } from './plans';
 import { Settings } from './Settings';
+import { Support } from './support';
 
 export default function DashPage({PageInfo, isUser, setUser}: any) {
     
@@ -23,7 +24,7 @@ export default function DashPage({PageInfo, isUser, setUser}: any) {
                             : PageInfo.tree == 'settings'
                                 ? (<Settings isUser={isUser} setUser={setUser}/>)
                                 : PageInfo.tree == 'support'
-                                    ? (<>Support</>)
+                                    ? (<Support isUser={isUser} />)
                                     : PageInfo.tree == 'mail'
                                         ? (<>Mailing system</>)
                                         : PageInfo.tree == 'bills'

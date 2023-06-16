@@ -430,7 +430,7 @@ span.homePage{
     min-height: max-content;
     margin:.5rem auto;
 }
-.taskDisabled, .taskBoxChecked, .taskBox, .pagesContainer, .pagesContainer_1, .pagesContainer_2, .pagesContainer_3 {
+.taskDisabled, .taskBoxChecked, .taskBox, .pagesContainer, .pagesContainer_1, .pagesContainer_2, .pagesContainer_3, .pagesContainerX3{
     display:flex;
     flex-direction: column;
     position:relative;
@@ -605,6 +605,9 @@ span.homePage{
 }
 .pagesContainer_3{
     width:calc((100% / 3) - 1rem);
+}
+.pagesContainerX3 {
+    width: calc((100% - 30%) - 3rem);
 }
 .pagesContainer_2{
     width:calc(100% / 2 - 1rem);
@@ -835,48 +838,87 @@ ul.userPlanList {
     box-shadow:0 0 .25rem lightgray;
 }
 
-.animatedText {
-    flex-direction: row;
-    flex-wrap: wrap;
+.ticketsList {
+    list-style:none;
+    display:flex;
+    justify-content: center;
+    align-items:center;
+    flex-direction:column;
+    align-self:center;
+    justify-self:center;
+    margin:auto auto;
     width:100%;
-    overflow:hidden;
+    padding:.5rem 0 .5rem 0;
 }
-.textFade {
+
+.ticket {
+    display:flex;
+    flex-direction:column;
+    flex-wrap:nowrap;
+    width:95%;
+    margin:1px 0;
+    padding:.5rem 0;
+    border-top: 1px solid lightgray;
+    border-bottom: 1px solid lightgray;
+    justify-content:center;
+    align-items:center;
+}
+.ticketDetails {
+    display:flex;
+    flex-direction:row;
+    flex-wrap:nowrap;
+    width:100%;
+    justify-content: flex-start;
+    align-items: center;
+}
+.ticketStatus{
+    border-radius:15px;
+    border:1px solid gray;
+    width:3rem;
+    padding:0.5rem;
+    font-size:.6rem;
+    font-weight: normal;
+    
+    align-items: center;
+    justify-content: center;
     text-align:center;
-    height:1rem;
+    display:flex;
     color:white;
-    display: flex;
-    flex-direction: column;
-    animation: parentMove calc(1.5s * 3) steps(3) infinite;
 }
-.textFade span {
-    display:block;
+.lastMessage {
+    display:flex;
+    justify-content: flex-start;
+    align-items:center;
+    font-size:.55rem;
+    color:gray;
     width:100%;
-    height:1rem;
-    font-size:1rem;
-    animation: spanMove 1.5s infinite;
 }
-.animatedText:hover * {
-    animation-play-state: paused;
+.ticketLast {
+    text-align: left;
+    width:max-content;
 }
-@keyframes parentMove {
-    0% {
-      transform: translate(0, 0);
-    }
-    100% {
-        transform: translate(0, calc(3 * 1 * -1rem));
-    }
-  }
-@keyframes spanMove {
-    0% {
-      transform: translate(0, 0);
-    }
-    80%, 100% {
-        transform: translate(0, calc(1 * -1rem));
-    }
-  }
-
-
+.ticketLastUser {
+    text-align: center;
+    display:flex;
+    border-radius: 5px;
+    border:1px solid black;
+    background:darkslategray;
+    color:white;
+    width:5rem;
+    justify-content: center;
+    align-items:center;
+    margin-left:1rem;
+    padding:0 0.25rem;
+    flex-wrap:nowrap;
+    flex-direction:row;
+    overflow:hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.ticket:hover {
+    background:#be94ced5;
+    cursor:pointer;
+}
 
 @media only screen and (max-width: 765px) {
     .main{
