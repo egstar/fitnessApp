@@ -1,4 +1,4 @@
-import { uToken } from "@/data/config";
+import * as env from "@/data/config";
 import { getDefaultPlans } from "@/models/Dashboard/Plans/PlanStats";
 import { getUserPlans } from "@/models/Dashboard/Plans/Userplans";
 import { getTasks } from "@/models/Dashboard/Tasks/TaskList";
@@ -7,13 +7,13 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
-    if(req.method !== 'POST'  && req.headers.origin !== 'https://fitness-app-dun.vercel.app'){
-        throw new Error(`Error, Forbiden acccess.`)
+    if(req.method !== 'POST'  && req.headers.origin !== env.WEBSITE){
+        res.status(400).json({error: `Error, Forbiden acccess.`})
     }
-    const session = req.cookies[uToken]!
+    const session = req.cookies[env.uToken]!
     const userId = await getSession(session)
     if(!userId.uid) {
-        throw new Error(`Error, Access denied`)
+        res.status(400).json({error: `Error, Access denied`})
     }
     const defaultPlans = await getDefaultPlans()
     const userPlans = await getUserPlans(userId.uid)

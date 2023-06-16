@@ -4,7 +4,7 @@ import DbConn from "@/data/Database"
 export const getUserPlans = async(uid: number): Promise<any> => {
     try {
         const conn = await DbConn.connect();
-        const sQuery = "SELECT * from user_plans WHERE uid=$1 ORDER BY pstart"
+        const sQuery = "SELECT * from user_plans WHERE uid=$1 ORDER BY pduration DESC,pstart ASC"
         const result = await conn.query(sQuery, [uid])
 
         conn.release();

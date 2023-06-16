@@ -126,7 +126,6 @@ const Today = () => {
                 tsks.filter((tsk:any) => tsk.tstatus == 1).forEach(() => { b = b+1 })
                 entries.push({pname: pln, pid: Number(tsks[0].pid), ftsks: b, tsks: tsks})
             })
-            console.log(entries)
             setData(entries)
             setLoading(false)
             } else {

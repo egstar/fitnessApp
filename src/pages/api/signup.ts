@@ -3,12 +3,13 @@ import { createUser } from "@/models/Dashboard/Users/Signup";
 import { NextApiRequest, NextApiResponse } from "next";
 import crypto from 'crypto';
 import { findUser } from "@/models/Dashboard/Users/Users";
+import * as env from '@/data/config'
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
+export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<any> {
     if(req.method === 'GET'){
         res.status(403).redirect('/signup')
     }
-    if(req.method === 'POST'){
+    if(req.method === 'POST' && req.headers.origin !== env.WEBSITE){
         const {uname, fname, lname, email, userpass} = req.body
         const fUser = await findUser(uname)
         if(fUser){
@@ -21,11 +22,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             
         }
         const cryptoSalt = crypto.randomBytes(16).toString('hex')
-    if(!userpass) {
-        throw new Error(`Password field is missing.`)
-    }
-    const upass = crypto.pbkdf2Sync(userpass, cryptoSalt, 1000, 64, 'sha512').toString('hex')
-    const passEncrypt = upass+"b0rh4ms0l1m4n"+cryptoSalt
+        if(!userpass) {
+            res.status(400).json({error:`Password field is missing.`})
+        }
+        if(!fname){
+            res.status(400).json({error:`Firstname field is missing.`})
+        }
+        if(!lname){
+            res.status(400).json({error:`Lastname field is missing.`})
+        }
+        if(!uname){
+            res.status(400).json({error:`Username field is missing.`})
+        }
+        if(!email){
+            res.status(400).json({error:`Email address field is missing.`})
+        }
+        const upass = crypto.pbkdf2Sync(userpass, cryptoSalt, 1000, 64, 'sha512').toString('hex')
+        const passEncrypt = upass+"b0rh4ms0l1m4n"+cryptoSalt
         const nUser: User = {
             uname,
             fname,
@@ -33,7 +46,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             email,
             passwd: passEncrypt,
         }
-        await createUser(nUser)
-        res.status(200).redirect('/')
+        const newUser = await createUser(nUser)
+        if(newUser.severity == 'ERROR') {
+            res.status(403).json({error: `${newUser.detail}`})
+        } else {
+            res.status(200).json({message: `User has been created successfully.`})
+        }
     }
 }

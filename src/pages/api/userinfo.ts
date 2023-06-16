@@ -5,9 +5,10 @@ import { uToken } from "../_app";
 import { verifyPass } from "@/models/Dashboard/Users/Login";
 import { updateImage, updatePassword } from "@/models/Dashboard/Users/Update";
 import { UpdateInfo } from '@/models/Dashboard/Users/Update';
+import * as env from "@/data/config";
 
 export default async function handler(req:NextApiRequest, res:NextApiResponse){
-    if(req.method != 'POST' || !req.cookies[uToken]){
+    if(req.method != 'POST' && !req.cookies[uToken] && req.headers.origin !== env.WEBSITE){
         res.status(403).json({error:"Access is denied."})
     }
     const usrSession = await getSession(req.cookies[uToken]!)
@@ -41,9 +42,9 @@ export default async function handler(req:NextApiRequest, res:NextApiResponse){
             }
         }
         if(userInfo.fname != fname || userInfo.lname != lname || userInfo.email != email) {
-            const userUpdate = await UpdateInfo(uid,fname,lname,email)
-            if(!userUpdate) {
-                res.status(403).json({error: `Email address already registered, please try again`})
+            const userUpdate = await UpdateInfo(uid,fname,lname,email)  as unknown as any
+            if(userUpdate.severity == 'ERROR') {
+                res.status(403).json({error: `${userUpdate.detail}`})
             } else {
                 res.status(200).json({message: `User ${userInfo.uname} info has been updated`})
             }

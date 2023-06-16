@@ -1,29 +1,29 @@
-import { uToken } from "@/data/config";
+import * as env from "@/data/config";
 import { taskDone, taskUndone } from "@/models/Dashboard/Tasks/Tasks";
 import { getSession } from "@/models/Dashboard/Users/Users";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>){
 
-    if(req.method !== 'PUT' && req.headers.origin !== 'https://fitness-app-dun.vercel.app'){
-        throw new Error('Error, Access denied')
+    if(req.method !== 'PUT' && req.headers.origin !== env.WEBSITE){
+        res.status(400).json('Error, Access denied')
     }
 
     const {uid,pid,tid,tupdate} = req.body
     if(!tupdate && !tid && !pid && !uid) {
-        throw new Error(`Error, Access denied`)
+        res.status(400).json(`Error, Access denied`)
     }
-    const reqToken = req.cookies[uToken]!
+    const reqToken = req.cookies[env.uToken]!
     if(!reqToken) {
-        throw new Error(`Error, Access denied`)
+        res.status(400).json(`Error, Access denied`)
     }
     const currentSession = await getSession(reqToken)
     if(!currentSession){
-        throw new Error(`Error, Expired session`)
+        res.status(400).json(`Error, Expired session`)
     }
     if(tupdate == 'done') {
         const tstatus = await taskDone(uid, tid, pid)
-        if(!tstatus) throw new Error(`Error, Failed to update request`)
+        if(!tstatus) res.status(400).json(`Error, Failed to update request`)
         res.status(200).json(tstatus)
 
     } else if( tupdate == 'undone') {

@@ -33,14 +33,17 @@ if(!plans) return (<></>)
                     plans 
                     ? plans.map((pl: any,index: number) => {
                         return (
-                            <div key={'plan'+pl.plan} className={`accordion-item`} >
-                                <h2 className="accordion-header" id={`userPlans-head${pl.plan}`} style={{textAlign:'center',justifyContent:'center', alignItems:'center'}}>
-                                <button className="accordion-button" style={{fontSize: '1.7vw', height:'1rem',textAlign:'center'}} type="button" data-bs-toggle="collapse" data-bs-target={`#userPlans${pl.plan}`} aria-expanded={index ==0 ? "true" : 'false'} aria-controls={`userPlans${pl.plan}`}>
-                                    {pl.plan + ' Plan'}
-                                </button>
-                                </h2>
+                            <div key={'plan'+pl.plan} className={`accordion-item ${styles.accordionElm}`} >
+                                <div className="accordion-header" id={`userPlans-head${pl.plan}`} style={{display:'flex',textAlign:'center',justifyContent:'center', alignItems:'center'}}>
+                                    
+                                    <button className="accordion-button" style={{fontSize: '1.7vw', height:'1rem',textAlign:'center'}} type="button" data-bs-toggle="collapse" data-bs-target={`#userPlans${pl.plan}`} aria-expanded={index ==0 ? "true" : 'false'} aria-controls={`userPlans${pl.plan}`}>
+                                    <span className={styles.planActive} style={{background:`${new Date(pl.planEnd) < new Date() ? 'maroon' : new Date(pl.planStart) < new Date() ? 'darkgreen' : 'orange'}`}}>{new Date(pl.planEnd) < new Date() ? "Finished" : new Date(pl.planStart) < new Date() ? "Active" : "Not started"} </span>
+                                        <span>{pl.plan + ' Plan'}</span>
+                                        
+                                    </button>
+                                </div>
                                 <div id={`userPlans${pl.plan}`} className={`accordion-collapse collapse ${index == 0 ? `show` : 'collapse'}`} aria-labelledby={`userPlans-head${pl.plan}`} style={{overflow:'auto'}} data-bs-parent="#userPlans">
-                                    <div className={`accordion-body`} style={{background:'#b69ca9',borderTop:'3px solid #583b63', overflow:'auto', maxHeight:'50vh',margin:0,padding:0}}>
+                                    <div className={`accordion-body ${styles.accordionElmBody}`} style={{background:'#b69ca9',borderTop:'3px solid #583b63', overflow:'auto', maxHeight:'50vh',margin:0,padding:0}}>
                                         
                                         <table className={`table  table-sm table-striped-columns overflow-auto ${styles.tableContainer}`} style={{overflow:'auto'}}>
                                         <thead className={`${styles.tableHead}`}>
@@ -111,7 +114,21 @@ if(!plans) return (<></>)
                                             Object.entries(pl.tasks).map((tsk: any, index:number) => {
                                                 const cDate = new Date(tsk[0])
                                                 return (
-                                                    <tr key={index}>
+                                                        <tr 
+                                                        key={index} 
+                                                        className={`
+                                                                ${ cDate.toLocaleDateString('en-UK', {day: '2-digit',month:'2-digit',year:'numeric'}) == new Date(Date.now()).toLocaleDateString('en-UK', {day: '2-digit',month:'2-digit',year:'numeric'}) 
+                                                                    ? styles.todayLine
+                                                                    : null
+                                                                }  
+                                                            `}
+                                                        id={`
+                                                            ${cDate.toLocaleDateString('en-UK', {day: '2-digit',month:'2-digit',year:'numeric'}) == new Date(Date.now()).toLocaleDateString('en-UK', {day: '2-digit',month:'2-digit',year:'numeric'}) 
+                                                                ? 'todaysline'
+                                                                : pl.plan+'other'+index
+                                                        }
+                                                        `}
+                                                        >
                                                         <th scope={`row`}>
                                                             {
                                                             cDate.toLocaleDateString('en-UK', {
@@ -140,12 +157,14 @@ if(!plans) return (<></>)
                                                                     return (
                                                                         Number(ztsk[1].tstatus) === 1
                                                                         ? new Date(ztsk[1].tdate).toLocaleDateString('en-UK', {day: '2-digit',month:'2-digit',year:'numeric'}) == new Date(Date.now()).toLocaleDateString('en-UK', {day: '2-digit',month:'2-digit',year:'numeric'}) 
-                                                                            ? <td key={index} style={{background: 'linear-gradient( 45deg , orange , yellow, orange)', border:'1px solid darkorange'}}> X </td>
+                                                                            ? <td key={index} style={{border:'1px solid orange'}}> X </td>
                                                                             : <td key={index} style={{background:'linear-gradient(45deg, lightgray, transparent, lightgray)'}}> X </td>
                                                                         : Number(ztsk[1].tstatus) === 0
                                                                             ? new Date(ztsk[1].tdate) > new Date(Date.now())
                                                                                 ? <td key={index} className={styles.taskElement}>{ztsk[1].tname}</td>
-                                                                                : <td key={index} style={{background:'linear-gradient(45deg, #ff0000a5, #ff000055, #ff0000a5)', border:'1px solid darkred'}}>{}</td>
+                                                                                : new Date(ztsk[1].tdate).toLocaleDateString('en-UK', {day: '2-digit',month:'2-digit',year:'numeric'}) == new Date(Date.now()).toLocaleDateString('en-UK', {day: '2-digit',month:'2-digit',year:'numeric'}) 
+                                                                                    ? <td key={index} style={{border:'1px solid orange'}}>{}</td>
+                                                                                    : <td key={index} style={{background:'linear-gradient(45deg, #ff0000a5, #ff000055, #ff0000a5)', border:'1px solid darkred'}}>{}</td>
                                                                             : null
                                                                     )
                                                                 })

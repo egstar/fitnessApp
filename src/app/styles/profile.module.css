@@ -575,6 +575,23 @@ span.homePage{
 .planChoices:hover .planText {
     color:#5d4db4;
 }
+
+.planActive {
+    display:flex;
+    right:3rem;
+    z-index:999;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    font-size:.75rem;
+    border:1px solid lightgray;
+    border-radius:5px;
+    padding: 0 0.5rem;
+    width:6rem;
+    margin-right:1rem;
+    color:white;
+
+}
 .activePlan {
     background:rgba(253, 253, 255, 0.705);
     box-shadow:1px 1px .5rem rgba(131, 130, 130, 0.581);
@@ -622,7 +639,11 @@ span.homePage{
     justify-content:center;
     align-items:center;
 }
-
+.todayLine {
+    background: linear-gradient( 45deg , rgba(255, 166, 0, 0.75) ,rgba(255, 166, 0, 0.75) , rgba(255, 255, 0, 0.75), rgba(255, 166, 0, 0.75) , rgba(255, 166, 0, 0.75));
+    border:4px groove lightgray;
+    
+}
 .sectionContent {
     margin: .5rem auto;
     width:95%;
@@ -905,9 +926,14 @@ ul.userPlanList {
     .userTools{
         display:none
     }
-    
+    .accordionElm {
+        width:100%;
+    }
+    .accordionElmBody {
+        width:100%;
+    }
     .pagesContainer, .pagesContainer_1, .pagesContainer_2, .pagesContainer_3{
-        width:calc(100% - 2rem);
+        width:calc(100% - 1rem);
     }
     .taskBox, .taskBoxChecked, .taskDisabled {
         width: calc(50% - 2rem);

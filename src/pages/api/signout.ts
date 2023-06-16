@@ -1,33 +1,28 @@
-import { uToken } from "@/data/config";
-import { unsetCookie } from "@/models/Dashboard/Users/Login";
+import * as env from "@/data/config";
 import { getSession, unsetSession } from "@/models/Dashboard/Users/Users";
 import { NextApiRequest, NextApiResponse } from "next";
-import { useCookies } from "react-cookie";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
-    
 
-    if(req.method !== 'POST'){
-        throw new Error(`Error, Access denied`)
+export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<any> {
+    if(req.method !== 'POST' && req.headers.origin !== env.WEBSITE){
+        res.status(400).json({error: `Error, Access denied`})
     }
-    const sessionToken = req.cookies[uToken]
+    const sessionToken = req.cookies[env.uToken]
     
     if(!sessionToken) {
-        res.status(400).json(`User isn't logged in`)        
+        res.status(400).json({error: `User isn't logged in`})
     }
     
     const userSession = await getSession(sessionToken!)
     if(!userSession){
-        res.status(403).json(`Forbidden`)
+        res.status(403).json({error: `Forbidden`})
     }
 
     const remSession = await unsetSession(userSession.uid)
     
     if(remSession) {
-        res.status(200).json(`User logged out`)
+        res.status(200).json({message: `User logged out`})
     } else {
-        res.status(203).json(`User isn't logged in`)
+        res.status(300).json({error: `User isn't logged in`})
     }
-        
-
 }
