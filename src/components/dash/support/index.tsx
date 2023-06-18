@@ -4,93 +4,104 @@ import * as BsIcons from 'react-icons/bs';
 import * as FaIcons from 'react-icons/fa';
 import { UserImage } from '../userImage';
 export const Support = ({isUser}:any) => {
+    
     const tickets = [
         {
-            id: 1,
-            desc: 'Ticket1',
-            status: 'open',
-            messages: [
+            ticketsStates: {
+                total: 5,
+                open: 1,
+                solved: 3,
+                closed: 1
+            },
+            tickets: [
                 {
-                    sender: isUser.uname,
-                    text:'I need help',
-                    date: new Date()
+                    id: 1,
+                    desc: 'Ticket1',
+                    status: 'open',
+                    messages: [
+                        {
+                            sender: isUser.uname,
+                            text:'I need help',
+                            date: new Date()
+                        },
+                        {
+                            sender: 'Support User',
+                            text: 'OK',
+                            date: new Date(Date.now() - 50)
+                        },
+                        {
+                            sender: isUser.uname,
+                            text:'My account is not working fine',
+                            date: new Date()
+                        }
+                    ]
                 },
                 {
-                    sender: 'Support User',
-                    text: 'OK',
-                    date: new Date(Date.now() - 50)
+                    desc: 'Ticket2',
+                    status: 'closed',
+                    messages: [
+                        {
+                            sender: isUser.uname,
+                            text:'Left the case',
+                            date: new Date()
+                        },
+                        {
+                            sender: 'Support User',
+                            text: 'Case Closed Case Closed Case Closed Case Closed Case Closed Case Closed Case Closed Case Closed Case Closed Case Closed Case Closed Case Closed Case Closed Case Closed ',
+                            date: new Date(Date.now() - 50)
+                        }
+                    ]
                 },
                 {
-                    sender: isUser.uname,
-                    text:'My account is not working fine',
-                    date: new Date()
-                }
-            ]
-        },
-        {
-            desc: 'Ticket2',
-            status: 'closed',
-            messages: [
-                {
-                    sender: isUser.uname,
-                    text:'Left the case',
-                    date: new Date()
+                    id: 2,
+                    desc: 'Ticket3',
+                    status: 'solved',
+                    messages: [
+                        {
+                            sender: isUser.uname,
+                            text:'fix it please',
+                            date: new Date()
+                        },
+                        {
+                            sender: 'Support User',
+                            text: 'Done',
+                            date: new Date(Date.now() - 50)
+                        }
+                    ]
                 },
                 {
-                    sender: 'Support User',
-                    text: 'Case Closed Case Closed Case Closed Case Closed Case Closed Case Closed Case Closed Case Closed Case Closed Case Closed Case Closed Case Closed Case Closed Case Closed ',
-                    date: new Date(Date.now() - 50)
-                }
-            ]
-        },
-        {
-            id: 2,
-            desc: 'Ticket3',
-            status: 'solved',
-            messages: [
-                {
-                    sender: isUser.uname,
-                    text:'fix it please',
-                    date: new Date()
+                    id: 3,
+                    desc: 'Ticket3',
+                    status: 'solved',
+                    messages: [
+                        {
+                            sender: isUser.uname,
+                            text:'fix it please',
+                            date: new Date()
+                        },
+                        {
+                            sender: 'Support User',
+                            text: 'Done',
+                            date: new Date(Date.now() - 50)
+                        }
+                    ]
                 },
                 {
-                    sender: 'Support User',
-                    text: 'Done',
-                    date: new Date(Date.now() - 50)
-                }
-            ]
-        },
-        {
-            id: 3,
-            desc: 'Ticket3',
-            status: 'solved',
-            messages: [
-                {
-                    sender: isUser.uname,
-                    text:'fix it please',
-                    date: new Date()
-                },
-                {
-                    sender: 'Support User',
-                    text: 'Done',
-                    date: new Date(Date.now() - 50)
-                }
-            ]
-        },
-        {
-            id: 4,
-            desc: 'reading panel the last ticket is overflown the width of panel ',
-            status: 'solved',
-            messages: [
-                {
-                    sender: isUser.uname,
-                    text:'fix it please',
-                    date: new Date()
-                },
-                {
-                    sender: 'Support User',
-                    text: 'Done',
-                    date: new Date(Date.now() - 50)
+                    id: 4,
+                    desc: 'reading panel the last ticket is overflown the width of panel ',
+                    status: 'solved',
+                    messages: [
+                        {
+                            sender: isUser.uname,
+                            text:'fix it please',
+                            date: new Date()
+                        },
+                        {
+                            sender: 'Support User',
+                            text: 'Done',
+                            date: new Date(Date.now() - 50)
+                        }
+                    ]
                 }
             ]
         }
@@ -101,7 +112,7 @@ export const Support = ({isUser}:any) => {
         setRead({
             ticket: e.currentTarget.dataset.ticketid,
             desc: e.currentTarget.dataset.ticket,
-            messages: tickets.filter((tk: any) => tk.id == e.currentTarget.dataset.ticketid).map((tk: any) => (tk.messages)),
+            messages: tickets[0].tickets.filter((tk: any) => tk.id == e.currentTarget.dataset.ticketid).map((tk: any) => (tk.messages)),
             status: e.currentTarget.dataset.status
         })
 
@@ -112,28 +123,32 @@ export const Support = ({isUser}:any) => {
     return (
         <div className={`row g-0 ${styles.pagesContent}`} style={{height:'max-content'}}>
             <div className={`col-12`} style={{display:'flex',flexDirection:'row',}}>
-                <span className={`${styles.pagesContainer} ${styles.ticketBoxes}`} style={{borderRadius:'5px',boxShadow:'0 1px 2px purple',height:'5vmax'}}>
-                    Create new ticket
-                </span>
-                <span className={`${styles.pagesContainer} ${styles.ticketBoxes}`} style={{borderRadius:'5px',boxShadow:'0 1px 2px purple',height:'5vmax', color:'white', background:'darkorange'}}>
-                    Open
-                </span>
-                <span className={`${styles.pagesContainer} ${styles.ticketBoxes}`} style={{borderRadius:'5px',boxShadow:'0 1px 2px purple',height:'5vmax', color:'white', background:'maroon'}}>
-                    Closed
-                </span>
-                <span className={`${styles.pagesContainer} ${styles.ticketBoxes}`} style={{borderRadius:'5px',boxShadow:'0 1px 2px purple',height:'5vmax', color:'white', background:'darkgreen'}}>
-                    Solved
-                </span>
-                <span className={`${styles.pagesContainer} ${styles.ticketBoxes}`} style={{borderRadius:'5px',boxShadow:'0 1px 2px purple',height:'5vmax'}}>
-                    All tickets
-                </span>
+                <div className={`${styles.pagesContainer} ${styles.ticketBoxes}`} style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
+                    <span><FaIcons.FaPlus style={{fontSize:'2rem',color:'white'}} /></span>
+                </div>
+                <div className={`${styles.pagesContainer} ${styles.ticketBoxes}`} style={{borderTop:'3px solid darkorange'}}>
+                    <span>Open</span>
+                    <span style={{height:'70%',display:'flex',justifyContent:'center',alignItems:'center',width:'100%',color:'darkorange',fontSize:'1.5rem'}}>{tickets[0].ticketsStates.open}</span>
+                </div>
+                <div className={`${styles.pagesContainer} ${styles.ticketBoxes}`} style={{borderTop:'3px solid maroon'}}>
+                    <span>Closed</span>
+                    <span style={{height:'70%',display:'flex',justifyContent:'center',alignItems:'center',width:'100%',color:'maroon',fontSize:'1.5rem'}}>{tickets[0].ticketsStates.closed}</span>
+                </div>
+                <div className={`${styles.pagesContainer} ${styles.ticketBoxes}`} style={{borderTop:'3px solid darkgreen'}}>
+                    <span>Solved</span>
+                    <span style={{height:'70%',display:'flex',justifyContent:'center',alignItems:'center',width:'100%',color:'darkgreen',fontSize:'1.5rem'}}>{tickets[0].ticketsStates.solved}</span>
+                </div>
+                <div className={`${styles.pagesContainer} ${styles.ticketBoxes}`} >
+                    <span>Total</span>
+                    <span style={{height:'70%',display:'flex',justifyContent:'center',alignItems:'center',width:'100%',color:'gray',fontSize:'1.5rem'}}>{tickets[0].ticketsStates.total}</span>
+                </div>
             </div>
             <div className={`col-12 ${styles.supportData}`}>
                 <div className={styles.pagesContainer_3} style={{height:'15rem'}}>
                     <span style={{position:'sticky',top:0,background:'lightgray',borderRadius:'12px 12px 0 0'}}>User Support tickets</span>
                     <ul className={styles.ticketsList} style={{overflowY:'auto',justifyContent:'flex-start'}}>
                         {
-                            tickets.map((tk: any, index:number) => {
+                            tickets[0].tickets.map((tk: any, index:number) => {
                                 return(
                                     <li 
                                     onClick={readMessages} 

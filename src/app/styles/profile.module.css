@@ -490,9 +490,6 @@ span.homePage{
     flex-direction:row;
 
 }
-.pagesContainer:hover {
-    border-top:3px solid rgb(5, 165, 5);
-}
 .formContainer {
     display:flex;
     flex-direction: row;
@@ -839,6 +836,12 @@ ul.userPlanList {
     box-shadow:0 0 .25rem lightgray;
 }
 
+.ticketBoxes{
+    border-radius:5px;
+    box-shadow:'0 1px 2px powderblue';
+    height:5rem;
+}
+
 .ticketsList {
     list-style:none;
     display:flex;
@@ -889,7 +892,7 @@ ul.userPlanList {
 }
 .lastMessage {
     display:flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items:center;
     font-size:.55rem;
     color:gray;
@@ -1012,7 +1015,7 @@ ul.userPlanList {
     border:none;
     box-shadow:none;
     border-radius:10px;
-    height:100%;
+    height:85%;
     display:flex;
     justify-content:center;
     align-items:center;
