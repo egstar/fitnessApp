@@ -924,12 +924,15 @@ ul.userPlanList {
 .currentTicket {
     background:#f7e69ece;
 }
-.messageSenderUser {
+.messageSenderUser { 
     direction:rtl;
+}
+.messageSenderUser .msgUserContent  {
     background:rgb(209, 245, 242);
     border: 2px groove lightgray;
+    direction:ltr;
 }
-.messageSenderSupport {
+.messageSenderSupport .msgUserContent {
     background:lightsteelblue;
     border: 2px groove lightgray;
 }
@@ -938,7 +941,7 @@ ul.userPlanList {
     color:gray;
     display:flex;
     justify-content: flex-start;
-    align-items: flex-end;
+    align-self: flex-end;
     bottom: 0;
     margin-inline-end: .5rem;
     
@@ -987,8 +990,61 @@ ul.userPlanList {
 .msgUserContent {
     height:100%;
     display:flex;
+    width:65%;
+    margin: 0 .5rem;
+    border-radius:15px;
+}
+.msgUserContent > * {
+    margin:0 .5rem ;
+    
+}
+.msgUserInfo {
+    height:100%;
+    display:flex;
+    
 }
 
+.replyBox {
+    width:85%;
+    font-size:1.25vmax;
+    resize:none;
+    outline:none;
+    border:none;
+    box-shadow:none;
+    border-radius:10px;
+    height:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+}
+.supportForm {
+    display:flex;
+    justify-content: space-around;
+    align-items:center;
+    flex-direction: row;
+    flex-wrap:wrap;
+    gap:0.5rem;
+    width:100%;
+    margin:auto auto;
+    height:100%;
+}
+.ticketReply {
+    display:flex;
+    justify-content: space-around;
+    align-items:center;
+    flex-direction: row;
+    flex-wrap:nowrap;
+    height: 2.9rem;
+    margin:auto auto;
+    width:100%;
+    
+}
+.supportData {
+    display:flex;
+    flex-direction:row;
+    flex-wrap:nowrap;
+}
 @media only screen and (max-width: 765px) {
     .main{
         display:grid;
@@ -1003,9 +1059,10 @@ ul.userPlanList {
         font-family: var(--roboto-font) sans-serif;
         font-weight: 700;
         height:100%;
-        
     }
-    
+    .supportData{
+        flex-direction: column;
+    }
     .option p {
         display:flex;
         font-size:1vmax;

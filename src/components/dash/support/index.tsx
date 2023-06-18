@@ -106,9 +106,12 @@ export const Support = ({isUser}:any) => {
         })
 
     }
+    function submitReply(e: any) {
+        e.preventDefault()
+    }
     return (
-        <div className={styles.pagesContent} style={{height:'max-content'}}>
-            <div className={styles.pagesContent}>
+        <div className={`row g-0 ${styles.pagesContent}`} style={{height:'max-content'}}>
+            <div className={`col-12`} style={{display:'flex',flexDirection:'row',}}>
                 <span className={`${styles.pagesContainer} ${styles.ticketBoxes}`} style={{borderRadius:'5px',boxShadow:'0 1px 2px purple',height:'5vmax'}}>
                     Create new ticket
                 </span>
@@ -125,8 +128,8 @@ export const Support = ({isUser}:any) => {
                     All tickets
                 </span>
             </div>
-            <div className={styles.pagesContent} style={{height:'15rem',width:'100%'}}>
-                <div className={styles.pagesContainer_3} style={{height:'100%'}}>
+            <div className={`col-12 ${styles.supportData}`}>
+                <div className={styles.pagesContainer_3} style={{height:'15rem'}}>
                     <span style={{position:'sticky',top:0,background:'lightgray',borderRadius:'12px 12px 0 0'}}>User Support tickets</span>
                     <ul className={styles.ticketsList} style={{overflowY:'auto',justifyContent:'flex-start'}}>
                         {
@@ -170,49 +173,51 @@ export const Support = ({isUser}:any) => {
                     </ul>
                 </div>
                 <div className={styles.pagesContainerX3} style={{height:'15rem',justifyContent:'flex-start'}}>
-                <div style={{position:'sticky',top:0,background:'lightgray',borderRadius:'12px 12px 0 0'}}>Ticket's content</div>
-                <div ref={readingPanel} className={styles.messageContent} style={{height:'100%'}}>
-                    {
-                        read 
-                        ? (
-                            <div className={styles.readingMessage} style={{height:'calc(15rem - 1rem)'}}>
-                                <div className={styles.messageHead} style={{height:'10%',textAlign:'left',marginLeft:'.5rem'}}>
-                                    {read.desc}
-                                </div>
-                                <div className={styles.ticketMessages} style={{height:'60%', border:'1px solid lightgray',width:'97%',margin:'auto auto',overflowY:'auto'}}>
-                                    {
-                                        read.messages.map((objects: any) => {
-                                             return objects.map((msg: any, index: number) => {
-                                                return (
-                                                    <div key={index} className={`row g-0 ${msg.sender == isUser.uname ? styles.messageSenderUser : styles.messageSenderSupport}`} style={{zIndex:999,color:'white',display:'flex',alignItems:'center'}}>
-                                                        <div className={`col-3 row g-0 ${styles.msgUserInfo}`} style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent: 'center', flexWrap: 'nowrap' }}>
-                                                            <div className={`col-12 ${styles.msgUserPic}`} >{ msg.sender == isUser.uname ? <UserImage isUser={isUser}  /> : <UserImage /> }</div>
-                                                            <div className={`col-12 ${styles.msgUserName}`}><span>{msg.sender}</span></div>
+                    <div style={{position:'static',top:0,background:'lightgray',borderRadius:'12px 12px 0 0'}}>
+                        Ticket's content
+                    </div>
+                    <div ref={readingPanel} className={styles.messageContent} style={{height:'100%'}}>
+                        {
+                            read 
+                            ? (
+                                <div className={styles.readingMessage} style={{height:'13.5rem'}}>
+                                    <div className={styles.messageHead} style={{height:'1.5rem',textAlign:'left',margin:'auto auto',padding:'0 .75rem',textOverflow:'ellipsis',overflow:'hidden'}}>
+                                        Topic: <span style={{color:'black',fontSize:'.8rem'}}>{read.desc}</span>
+                                    </div>
+                                    <div className={styles.ticketMessages} style={{height:'9rem', border:'1px groove lightgray',width:'97%',margin:'auto auto',overflowY:'auto'}}>
+                                        {
+                                            read.messages.map((objects: any) => {
+                                                return objects.map((msg: any, index: number) => {
+                                                    return (
+                                                        <div key={index} className={`row g-0 ${msg.sender == isUser.uname ? styles.messageSenderUser : styles.messageSenderSupport}`} style={{zIndex:999,color:'white',display:'flex',alignItems:'center'}}>
+                                                            <div className={`col-3 row g-0 ${styles.msgUserInfo}`} style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent: 'center', flexWrap: 'nowrap' }}>
+                                                                <div className={`col-12 ${styles.msgUserPic}`} >{ msg.sender == isUser.uname ? <UserImage isUser={isUser}  /> : <UserImage /> }</div>
+                                                                <div className={`col-12 ${styles.msgUserName}`}><span>{msg.sender}</span></div>
+                                                            </div>
+                                                            <div className={`col-9 row g-0 ${styles.msgUserContent}`}>
+                                                                <div className={`col-11 ${styles.msgText}`}>{msg.text}</div>
+                                                                <div className={`col-12 ${styles.msgDate}`}>{msg.date.toLocaleString('en-UK')}</div>
+                                                            </div>
                                                         </div>
-                                                        <div className={`col-9 row g-0 ${styles.msgUserContent}`}>
-                                                            <div className={`col-11 ${styles.msgText}`}>{msg.text}</div>
-                                                            <div className={`col-12 ${styles.msgDate}`}>{msg.date.toLocaleString('en-UK')}</div>
-                                                        </div>
-                                                    </div>
-                                                )
+                                                    )
+                                                })
                                             })
-                                        })
-                                    }
-                                </div>
-                                <div className={styles.ticketReply} style={{height:'20%'}}>
-                                    <form className={styles.supportForm} style={{display:'flex',flexDirection:'row',alignItems:'center',justifyContent:'space-around',height:'100%'}}>
-                                    <textarea className={styles.replyBox} placeholder={'Type your message here'}rows={1} style={{width:'85%',fontSize:'1.25vmax', resize:'none',outline:'none', border:'none',boxShadow:'none',textIndent:'.5rem',textAnchor:'middle',borderRadius:'10px',height:'90%'}}></textarea>
-                                    <button className={`btn btn-success`} type={'submit'} name={'submit'} ><BsIcons.BsSend /></button>
-                                    </form>
+                                        }
+                                    </div>
+                                    <div className={styles.ticketReply}>
+                                        <form className={styles.supportForm} onSubmit={submitReply}>
+                                            <textarea className={styles.replyBox} placeholder={'Type your message here'}rows={1} ></textarea>
+                                            <button className={`btn btn-success`} type={'submit'} name={'submit'} ><BsIcons.BsSend /></button>
+                                        </form>
+
+                                    </div>
 
                                 </div>
+                            )
 
-                            </div>
-                        )
-
-                        : 'No message selected'
-                    }
-                </div>
+                            : 'No message selected'
+                        }
+                    </div>
                 </div>
             </div>
         </div>
