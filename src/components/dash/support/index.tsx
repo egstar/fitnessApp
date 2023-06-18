@@ -189,7 +189,7 @@ export const Support = ({isUser}:any) => {
                 </div>
                 <div className={styles.pagesContainerX3} style={{height:'15rem',justifyContent:'flex-start'}}>
                     <div style={{position:'static',top:0,background:'lightgray',borderRadius:'12px 12px 0 0'}}>
-                        Ticket's content
+                        Ticket&apos;s content
                     </div>
                     <div ref={readingPanel} className={styles.messageContent} style={{height:'100%'}}>
                         {
