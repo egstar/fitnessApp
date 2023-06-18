@@ -11,6 +11,7 @@
     background-attachment: fixed;
     font-family: var(--roboto-font) sans-serif;
     font-weight: 700;
+    height:100%;
     
 }
 .navBar{
@@ -848,7 +849,7 @@ ul.userPlanList {
     justify-self:center;
     margin:auto auto;
     width:100%;
-    padding:.5rem 0 .5rem 0;
+    padding:.25rem 0 .25rem 0;
 }
 
 .ticket {
@@ -875,10 +876,11 @@ ul.userPlanList {
     border-radius:15px;
     border:1px solid gray;
     width:3rem;
-    padding:0.5rem;
+    padding:0.5rem 0;
     font-size:.6rem;
     font-weight: normal;
-    
+    height:1rem;
+
     align-items: center;
     justify-content: center;
     text-align:center;
@@ -916,8 +918,75 @@ ul.userPlanList {
     white-space: nowrap;
 }
 .ticket:hover {
-    background:#be94ced5;
+    background:#f7e69ece;
     cursor:pointer;
+}
+.currentTicket {
+    background:#f7e69ece;
+}
+.messageSenderUser {
+    direction:rtl;
+    background:rgb(209, 245, 242);
+    border: 2px groove lightgray;
+}
+.messageSenderSupport {
+    background:lightsteelblue;
+    border: 2px groove lightgray;
+}
+.msgDate {
+    font-size:.8vmax;
+    color:gray;
+    display:flex;
+    justify-content: flex-start;
+    align-items: flex-end;
+    bottom: 0;
+    margin-inline-end: .5rem;
+    
+}
+.msgUserPic {
+    margin: auto auto;
+    justify-content: center;
+    align-items: center;
+    display:flex;
+    margin-top:0.25rem;
+}
+.msgUserPic > * {
+    width:40%;
+    margin:auto auto;
+    
+}
+.msgUserName {
+    margin: auto auto;
+    justify-content: center;
+    align-items:center;
+    display:flex;
+    
+}
+.msgUserName > span {
+    margin: .25rem 0;
+    font-size:1vmax;
+    border-radius: 5px;
+    border:1px solid black;
+    background:darkslategray;
+    color:white;
+    padding:0 .5rem;
+    flex-wrap:nowrap;
+    flex-direction:row;
+    overflow:hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    justify-content: center;
+    align-items:center;
+}
+.msgText {
+    text-align:left;
+    color:#5d4db4;
+    font-size:1vmax;
+    padding: 1rem 0;
+}
+.msgUserContent {
+    height:100%;
+    display:flex;
 }
 
 @media only screen and (max-width: 765px) {
@@ -933,6 +1002,7 @@ ul.userPlanList {
         background-attachment: fixed;
         font-family: var(--roboto-font) sans-serif;
         font-weight: 700;
+        height:100%;
         
     }
     
@@ -974,8 +1044,9 @@ ul.userPlanList {
     .accordionElmBody {
         width:100%;
     }
-    .pagesContainer, .pagesContainer_1, .pagesContainer_2, .pagesContainer_3{
+    .pagesContainer, .pagesContainer_1, .pagesContainer_2, .pagesContainer_3, .pagesContainerX3{
         width:calc(100% - 1rem);
+        
     }
     .taskBox, .taskBoxChecked, .taskDisabled {
         width: calc(50% - 2rem);
@@ -1017,6 +1088,9 @@ ul.userPlanList {
     .formGroup > * {
         margin:auto auto;
         min-width:calc(100% / 3 - 1rem);
+    }
+    .ticketBoxes {
+        font-size:1.5vmax;
     }
 }
 
