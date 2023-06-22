@@ -1,0 +1,9 @@
+/* Replace with your SQL commands */
+CREATE TABLE IF NOT EXISTS support(
+    id SERIAL PRIMARY KEY UNIQUE,
+    uid BIGINT NOT NULL REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    topic TEXT NOT NULL,
+    cat VARCHAR(250) NOT NULL DEFAULT('Main'),
+    status INT NOT NULL DEFAULT 0
+);
+
