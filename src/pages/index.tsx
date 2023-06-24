@@ -81,6 +81,8 @@ const signOut = async() => {
     removeCookie(uToken, {
       path: '/'
     })
+  }).then(() => {
+    router.replace('/')
   })
   setLoading(false)
   router.reload()

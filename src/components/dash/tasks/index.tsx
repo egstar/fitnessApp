@@ -1,7 +1,7 @@
 import styles from '@/app/styles/profile.module.css'
 import {useState, useEffect} from 'react'
 
-const Plans = () => {
+const Plans = ({setLoading,isLoading}: any) => {
 const [plans, setPlans] = useState() as any
 const [nullPlans, setNullPlans] = useState(false)
 
@@ -19,6 +19,7 @@ useEffect(() => {
         setPlans(data)
     })
     setNullPlans(false)
+    setLoading(false)
 },[nullPlans])
 if(!plans) return (<></>)
 

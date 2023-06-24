@@ -8,7 +8,7 @@ import { CreaetPlan } from './plans';
 import { Settings } from './Settings';
 import { Support } from './support';
 
-export default function DashPage({PageInfo, isUser, setUser}: any) {
+export default function DashPage({PageInfo, isUser, setUser, setLoading, isLoading}: any) {
     
     return (
         <div className={styles.pages}>
@@ -16,24 +16,24 @@ export default function DashPage({PageInfo, isUser, setUser}: any) {
             {
                 PageInfo.tree 
                 ? PageInfo.tree == 'today' 
-                    ? (<Today />)
+                    ? (<Today setLoading={setLoading} isLoading={isLoading} />)
                     : PageInfo.tree == 'tasks'
-                        ? (<Plans />) 
+                        ? (<Plans  setLoading={setLoading} isLoading={isLoading}  />) 
                         : PageInfo.tree == 'subs'
-                            ? (<CreaetPlan />)
+                            ? (<CreaetPlan  setLoading={setLoading} isLoading={isLoading} />)
                             : PageInfo.tree == 'settings'
-                                ? (<Settings isUser={isUser} setUser={setUser}/>)
+                                ? (<Settings  setLoading={setLoading} isLoading={isLoading} isUser={isUser} setUser={setUser}/>)
                                 : PageInfo.tree == 'support'
-                                    ? (<Support isUser={isUser} />)
+                                    ? (<Support  setLoading={setLoading} isLoading={isLoading}  isUser={isUser} />)
                                     : PageInfo.tree == 'mail'
                                         ? (<>Mailing system</>)
                                         : PageInfo.tree == 'bills'
                                         ? (<>Billing System</>)
                                         : PageInfo.tree == 'users'
                                         ? (<>Users List</>)
-                                        : PageInfo.tree == 'admin'
-                                        ? (<>Administrator</>)
-                                        : (<CreaetPlan />)
+                                        : PageInfo.sub && PageInfo.tree.includes('admin')
+                                        ? (<>{ PageInfo.tree.toLowerCase() }</>)
+                                        : (<CreaetPlan  setLoading={setLoading} isLoading={isLoading} />)
                 : (<><div className={styles.pagesContent}>
                     <div className={styles.pagesContainer}>
                         <div className={styles.userGraph}>

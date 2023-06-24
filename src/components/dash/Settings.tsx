@@ -11,10 +11,10 @@ import ValidateForm from "@/models/FormValidation"
 
 
 
-export const Settings = ({isUser, setUser}: any) => {
+export const Settings = ({isUser, setUser,isLoading, setLoading}: any) => {
     const router = useRouter()
     
-    const [isLoading, setLoading] = useState(false)
+    
     const [info, setInfo] = useState() as any
     const [plans, setPlans] = useState() as any
     const [chPass, switchPass] = useState(false)

@@ -12,42 +12,15 @@ import { useCookies } from 'react-cookie';
 import { uToken } from '../_app';
 
 
-export default function Profile() {
+export default function Profile({isUser, setUser,isLogged, setLogged, cookies, setCookie, removeCookie}: any) {
     const router = useRouter()    
     const [index, setIndex] = useState(router.query.index)
-    const [isUser, setUser] = useState({} as User)
-    const [isLogged, setLogged] = useState(false)
     const [isLoading, setLoading] = useState(false)
     const [gotMenu, setMenu] = useState(false)
     const [data, setData] = useState([])
     const [PageInfo, setPage] = useState({} as PgInfo)
     const [isActive, setActive] = useState(0)
-    const [cookies, setCookie, removeCookie] = useCookies([uToken])
-
     
-    useEffect(() => {
-        if(!isLogged){
-            fetch('/api/user', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include'
-            })
-            .then((res) => {
-                if(res.status != 200 ) { 
-                    removeCookie(uToken)
-                    router.replace('/')
-                }
-                return res.json()
-            }).then((data) => {
-                if(isUser != data) setUser(data)
-
-                setLogged(true)
-            })
-        }
-    }, [])
-
     if(isLogged && !gotMenu){
         setLoading(true)
         fetch('/api/menu', {
@@ -57,19 +30,25 @@ export default function Profile() {
             },
             credentials: 'include'
         })
-        .then((res) => res.json())
+        .then((res) => {
+            if(res.status != 200) return {error: res.json()}
+            return res.json()
+        })
         .then((dt) => {
-            dt.filter((f: MenuItem) => f.url.toLowerCase() === String(index).toLowerCase()).map((f: MenuItem) => {
-                if(f){
-                    setPage({
-                        page: f.opt,
-                        id: f.id,
-                        tree: f.url
-                    })
-                    setActive(f.id)
-                }
-            })
-            setData(dt)
+            if(!dt.error) {
+                dt.filter((f: MenuItem) => f.url.toLowerCase() === String(index).toLowerCase()).map((f: MenuItem) => {
+                    if(f){
+                        setPage({
+                            page: f.opt,
+                            id: f.id,
+                            tree: f.url,
+                            sub: false
+                        })
+                        setActive(f.id)
+                    }
+                })
+                setData(dt)
+            }
         })
         setMenu(true)
         setLoading(false)
@@ -77,38 +56,49 @@ export default function Profile() {
     
     useEffect(() => {
         setLoading(true)
-        data.filter((f: MenuItem) => f.url.toLowerCase() === String(index).toLowerCase()).map((f: MenuItem) => {
-            if(f){
+        const dataFilter = data.filter((f: MenuItem) => f.url.toLowerCase() === String(index).toLowerCase())
+        if(dataFilter.length > 0){
+            dataFilter.map((f: MenuItem) => {
                 setPage({
                     page: f.opt,
                     id: f.id,
-                    tree: f.url
+                    tree: f.url,
+                    sub: false
                 })
                 setActive(f.id)
-            } else {
-                setPage({
-                    page: 'Dashboard',
-                    id: 1,
-                    tree: 'home'
+            })
+        } else {
+            data.filter((f: MenuItem) => f.sub).map((f: MenuItem) => {
+                f.sub!.filter((s: any) => s.tree.toLowerCase() === String(index).toLowerCase())
+                .map((sb: any, index: number) => {
+                    setPage({
+                        page: sb.sub,
+                        id: sb.id,
+                        tree: sb.tree,
+                        sub: true,
+                        subParent: f.id
+                    })
+                    setActive(sb.id)
                 })
-                setActive(1)
-            }
+            })
             setLoading(false)
-        })
-        
+        }
+
     },[index])
     
     const tabHandler = (e:any) => {
         e.preventDefault();
         setIndex(e.currentTarget.href.split('/dash/')[1])
+        
     }
-    if(isLoading) return (<LoadingSpinner />)
-    if(gotMenu == false || !isUser || !index) return (<LoadingSpinner />)
+    
+    
     return(
         <main className={`${styles.main} ${roboto.className}`}>
             <DashNav isUser={isUser} />
             <SideMenu setUser={setUser} isUser={isUser as unknown as any} tabHandler={tabHandler} index={index} setActive={setActive} isActive={isActive} setIndex={setIndex} setPage={setPage} PageInfo={PageInfo} data={data} setData={setData} />
-            <DashPage PageInfo={PageInfo} isUser={isUser} setUser={setUser} />
+            {/* {isLoading ? <LoadingSpinner /> : null} */}
+            <DashPage PageInfo={PageInfo} isUser={isUser} setUser={setUser} setLoading={setLoading} isLoading={isLoading}/>
         </main>
     )
 }

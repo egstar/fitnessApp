@@ -4,7 +4,7 @@ import * as BsIcons from 'react-icons/bs';
 import * as FaIcons from 'react-icons/fa';
 import { UserImage } from '../userImage';
 import LoadingSpinner from '@/components/Loading';
-export const Support = ({isUser}:any) => {
+export const Support = ({isUser, setLoading, isLoading}:any) => {
     
     const [tickets, setTickets] = useState() as any
     const [read, setRead] = useState() as any
@@ -34,6 +34,7 @@ export const Support = ({isUser}:any) => {
             if(data.utickets) setTickets(data)
         })
         setNewTicket(false)
+        setLoading(false)
     },[newTkt])
 
     function readMessages(e: any) {

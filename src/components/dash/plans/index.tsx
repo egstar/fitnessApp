@@ -14,7 +14,7 @@ const fetcher = async (url: any) => await fetch(url, {
     credentials: 'include'
 }).then(r => r.json())
 
-export const CreaetPlan = () => {
+export const CreaetPlan = ({isLoading, setLoading}: any) => {
     const [cusTasks, setCusTasks] = useState(false)
     const [plan, setPlan] = useState() as any
     const [tasks , setTasks] = useState([]) as any
@@ -37,6 +37,7 @@ export const CreaetPlan = () => {
     
     useEffect(() => {
         if(fData) setFetched(fData)
+        setLoading(false)
     },[fData])
 
     const handleDateChange = (e: any) => {

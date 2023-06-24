@@ -11,7 +11,9 @@ export type PgInfo = {
     id: number,
     page: string,
     tree: string,
-    isActive?: number
+    isActive?: number,
+    sub: boolean,
+    subParent?: number
 }
 
 export type User = {

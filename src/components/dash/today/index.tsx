@@ -3,11 +3,11 @@ import { useState, useEffect } from 'react';
 
 
 
-const Today = () => {
+const Today = ({setLoading,isLoading}:any) => {
     let currentTime = new Date()
     
     const [data, setData] = useState() as any
-    const [isLoading, setLoading] = useState(false)
+    
     
     const handleTask = (e: any,tsk: any) => {
         e.preventDefault();
@@ -116,27 +116,26 @@ const Today = () => {
             return null })
           .then((dt) => {
             if(dt && dt.length != 0){
-            const plans: {} = dt.reduce((plans: any,tasks: any) => ({
-                ...plans,
-                [tasks.pname]: [...(plans[tasks.pname] || []), tasks]
-            }), {})
-            let entries: any = [];
-            Object.entries(plans).map(([pln,tsks]: any) => {
-                let b = 0;
-                tsks.filter((tsk:any) => tsk.tstatus == 1).forEach(() => { b = b+1 })
-                entries.push({pname: pln, pid: Number(tsks[0].pid), ftsks: b, tsks: tsks})
-            })
-            setData(entries)
-            setLoading(false)
+                const plans: {} = dt.reduce((plans: any,tasks: any) => ({
+                    ...plans,
+                    [tasks.pname]: [...(plans[tasks.pname] || []), tasks]
+                }), {})
+                let entries: any = [];
+                Object.entries(plans).map(([pln,tsks]: any) => {
+                    let b = 0;
+                    tsks.filter((tsk:any) => tsk.tstatus == 1).forEach(() => { b = b+1 })
+                    entries.push({pname: pln, pid: Number(tsks[0].pid), ftsks: b, tsks: tsks})
+                })
+                setData(entries)
             } else {
                 setData(null)
-                setLoading(false)
             }
           })
+          setLoading(false)
       }, [])
 
 
-    if (isLoading) return <div className={`${styles.loading}`}><span className={`${styles.loadingData}`}>Loading ...</span></div>
+    
     // if (!isLoading && !data) return <div className={`${styles.errorPage}`}><p className={`${styles.errorMessage}`}> <br /> Error!, Page isn't loading, please refresh the page or contact site admins</p></div>
     const taskDay = new Date(Date.now())
     

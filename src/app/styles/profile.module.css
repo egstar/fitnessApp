@@ -331,7 +331,7 @@
     border-top:1px solid rgba(128, 128, 128, 0.384);
     text-transform: capitalize;
     margin-top:2px;
-    transition: 1s all ease;
+    transition: background 1ms ease;
     background:linear-gradient(45deg, rgba(7, 7, 75, 0.164),rgba(147, 166, 170, 0.164));
     color: #f2bdae;
     overflow:hidden;
@@ -356,18 +356,21 @@
 }
 .option:hover{
     background:rgba(58, 9, 54, 0.3);
-
     cursor:pointer;
     font-weight: 900;
     border-right: 4px solid #f2bdae;
-    transition: none;
+    
 }
 .activeOption {
-    background:rgba(128, 128, 128, 0.315);
     font-weight: 900;
     border-right: 4px solid #f2bdae;
-    
     background:rgba(58, 9, 54, 0.3);
+}
+.activeOptionParent {
+    font-weight: 900;
+    border-right: 4px solid #f2bdae;
+    background:rgba(58, 9, 54, 0.8);
+    filter: drop-shadow(0px 0px 1rem rgba(58, 9, 54, 0.8));
 }
 
 .pages{
