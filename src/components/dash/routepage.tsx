@@ -31,7 +31,7 @@ export default function DashPage({PageInfo, isUser, setUser, setLoading, isLoadi
                                         ? (<>Billing System</>)
                                         : PageInfo.tree == 'users'
                                         ? (<>Users List</>)
-                                        : PageInfo.sub && PageInfo.tree.includes('admin')
+                                        : PageInfo.tree && PageInfo.tree.includes('admin')
                                         ? (<>{ PageInfo.tree }</>)
                                         : (<CreaetPlan  setLoading={setLoading} isLoading={isLoading} />)
                 : (<><div className={styles.pagesContent}>
