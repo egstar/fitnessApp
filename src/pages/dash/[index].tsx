@@ -69,7 +69,7 @@ export default function Profile({isUser, setUser,isLogged, setLogged, cookies, s
             })
         } else {
             data.filter((f: MenuItem) => f.sub).map((f: MenuItem) => {
-                f.sub!.filter((s: any) => s.tree.toLowerCase() === String(index).toLowerCase())
+                f.sub!.filter((s: any) => s.tree!.toLowerCase() === String(index).toLowerCase())
                 .map((sb: any, index: number) => {
                     setPage({
                         page: sb.sub,
