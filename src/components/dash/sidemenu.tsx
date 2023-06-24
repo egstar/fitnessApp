@@ -32,7 +32,7 @@ const SideMenu = ({index, setIndex, setData, data, setPage, PageInfo, isActive, 
                 </div>
 
                 <ul className={styles.sideMenu}>
-                    { data.map((elm: MenuItem) => {
+                    { data.map((elm: MenuItem, index:number) => {
                         let IconCat: string = elm.logo.split('.')[0] as string
                         let Icon: string = elm.logo.split('.')[1]
                         let Logo: IconType = FaIcons["FaArrowCircleRight"]
@@ -43,7 +43,7 @@ const SideMenu = ({index, setIndex, setData, data, setPage, PageInfo, isActive, 
 
                         }
                         return (
-                            <>
+                            <div key={index}>
                             {
                                 elm.sub
                                 ? (
@@ -83,7 +83,7 @@ const SideMenu = ({index, setIndex, setData, data, setPage, PageInfo, isActive, 
                                     </Link>
                                 )
                             }
-                            </>
+                            </div>
                         )
                     }
                     )}
