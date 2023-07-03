@@ -7,8 +7,24 @@ import Plans from '@/components/dash/tasks';
 import { CreaetPlan } from './plans';
 import { Settings } from './Settings';
 import { Support } from './support';
+import { AdminUsers } from './admin/users';
+
+
+
 
 export default function DashPage({PageInfo, isUser, setUser, setLoading, isLoading}: any) {
+
+    const Menu = ({Page}: any) => {
+        const Pages:any = {
+            'admin/users': <AdminUsers setLoading={setLoading} isLoading={isLoading} />,
+            'admin/plans': null,
+            'admin/menu': null,
+            'admin/tasks': null,
+            'admin/support': null
+        }
+        
+        return Pages[Page]
+    }
     
     return (
         <div className={styles.pages}>
@@ -32,7 +48,7 @@ export default function DashPage({PageInfo, isUser, setUser, setLoading, isLoadi
                                         : PageInfo.tree == 'users'
                                         ? (<>Users List</>)
                                         : PageInfo.tree && PageInfo.tree.includes('admin')
-                                        ? (<>{ PageInfo.tree }</>)
+                                        ? (<Menu Page={PageInfo.tree} />)
                                         : (<CreaetPlan  setLoading={setLoading} isLoading={isLoading} />)
                 : (<><div className={styles.pagesContent}>
                     <div className={styles.pagesContainer}>

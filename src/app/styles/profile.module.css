@@ -459,11 +459,21 @@ span.homePage{
     width:100%;
     height:100%;
 }
+.userTableContainer {
+    background:rgb(185, 185, 185);
+    color:rgb(87, 141, 190);
+    margin:0;
+    padding:0;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+}
 .tableHead {
     position:sticky;
     font-size:.6rem;
     top:0rem;
-    background:rgb(185, 185, 185);
+    background:linear-gradient(to top, rgba(99, 98, 98, 0.781),rgb(185, 185, 185),rgba(99, 98, 98, 0.781));
     color:rgb(87, 141, 190);
     
 }
@@ -1059,6 +1069,53 @@ ul.userPlanList {
     flex-direction:row;
     flex-wrap:nowrap;
 }
+.stopSign {
+    display:none;
+    font-size:1.25rem;
+    font-weight:lighter;
+}
+.killSession {
+    width:5rem;
+    font-size:.8vmax;
+    font-weight: bold;
+}
+.killSession:hover .sessionExp {
+    display:none;
+}
+.killSession:hover .stopSign {
+    display:inline-flex;
+    color:red;
+}
+.btnDataShow {
+    display:flex;
+    justify-content:flex-end;
+    width:100%;
+}
+.btnDataShow > th {
+    width:100%;
+}
+.btnDataHidden {
+    display:none;
+}
+.checkEye {
+    position:absolute;
+    display:flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-right:5px;
+    top:0;
+    height:100%;
+    right:0;
+    background:white;
+    color:black;
+}
+.deleteUser {
+    display:flex;
+    justify-content: center;
+    align-items:center;
+    flex-wrap:nowrap;
+    flex-direction:column;
+}
 @media only screen and (max-width: 765px) {
     .main{
         display:grid;
@@ -1162,6 +1219,9 @@ ul.userPlanList {
     }
     .ticketBoxes {
         font-size:1.5vmax;
+    }
+    .userTableContainer {
+        width:max-content;
     }
 }
 

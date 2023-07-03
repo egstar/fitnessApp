@@ -157,13 +157,13 @@ if(!plans) return (<></>)
                                                                 Object.entries(tsk[1]).map((ztsk:any, index: number) => {
                                                                     return (
                                                                         Number(ztsk[1].tstatus) === 1
-                                                                        ? new Date(ztsk[1].tdate).toLocaleDateString('en-UK', {day: '2-digit',month:'2-digit',year:'numeric'}) == new Date(Date.now()).toLocaleDateString('en-UK', {day: '2-digit',month:'2-digit',year:'numeric'}) 
+                                                                        ? new Date(ztsk[1].tdate).toLocaleDateString('en-UK', {day: '2-digit',month:'2-digit',year:'numeric'}) == new Date(Date.now() - 10800000).toLocaleDateString('en-UK', {day: '2-digit',month:'2-digit',year:'numeric'}) 
                                                                             ? <td key={index} style={{border:'1px solid orange'}}> X </td>
                                                                             : <td key={index} style={{background:'linear-gradient(45deg, lightgray, transparent, lightgray)'}}> X </td>
                                                                         : Number(ztsk[1].tstatus) === 0
-                                                                            ? new Date(ztsk[1].tdate) > new Date(Date.now())
+                                                                            ? new Date(ztsk[1].tdate) > new Date(Date.now() - 10800000)
                                                                                 ? <td key={index} className={styles.taskElement}>{ztsk[1].tname}</td>
-                                                                                : new Date(ztsk[1].tdate).toLocaleDateString('en-UK', {day: '2-digit',month:'2-digit',year:'numeric'}) == new Date(Date.now()).toLocaleDateString('en-UK', {day: '2-digit',month:'2-digit',year:'numeric'}) 
+                                                                                : new Date(ztsk[1].tdate).toLocaleDateString('en-UK', {day: '2-digit',month:'2-digit',year:'numeric'}) == new Date(Date.now()  - 10800000).toLocaleDateString('en-UK', {day: '2-digit',month:'2-digit',year:'numeric'}) 
                                                                                     ? <td key={index} style={{border:'1px solid orange'}}>{}</td>
                                                                                     : <td key={index} style={{background:'linear-gradient(45deg, #ff0000a5, #ff000055, #ff0000a5)', border:'1px solid darkred'}}>{}</td>
                                                                             : null

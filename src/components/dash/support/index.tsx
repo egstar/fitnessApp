@@ -10,6 +10,7 @@ export const Support = ({isUser, setLoading, isLoading}:any) => {
     const [read, setRead] = useState() as any
     const [newE, setNewE] = useState(false)
     const [newTkt, setNewTicket] = useState() as any
+    const ticketMsgs = useRef() as any
     const readingPanel = useRef() as any
     const rplyBox = useRef() as any
 
@@ -44,8 +45,10 @@ export const Support = ({isUser, setLoading, isLoading}:any) => {
             messages: Object.entries(tickets.utickets).filter((tk: any) => tk[1][0].id == e.currentTarget.dataset.ticketid).map((tk: any) => (tk[1][0].messages)),
             status: e.currentTarget.dataset.status
         })
-
     }
+    useEffect(() => {
+        if(read) ticketMsgs.current.scrollTop = Number(ticketMsgs.current.scrollHeight) + 100
+    },[read])
     function submitReply(e: any) {
         e.preventDefault()
         setNewE(true)
@@ -75,10 +78,11 @@ export const Support = ({isUser, setLoading, isLoading}:any) => {
                 date: new Date(data.tdate)
             }})
             setRead(currentTopic)
+            ticketMsgs.current.scrollTop = Number(ticketMsgs.current.scrollHeight) + 100
             setNewE(false)
         })
     }
-
+    
     function submitNewTicket(e: any){
         e.preventDefault()
         const ticketData = new FormData(e.currentTarget)
@@ -223,7 +227,7 @@ export const Support = ({isUser, setLoading, isLoading}:any) => {
                                     <div className={styles.messageHead} style={{height:'1.5rem',textAlign:'left',margin:'auto auto',padding:'0 .75rem',textOverflow:'ellipsis',overflow:'hidden'}}>
                                         Topic: <span style={{color:'black',fontSize:'.8rem'}}>{read.desc}</span>
                                     </div>
-                                    <div className={styles.ticketMessages} style={{height:'9rem', border:'1px groove lightgray',width:'97%',margin:'auto auto',overflowY:'auto'}}>
+                                    <div ref={ticketMsgs} className={styles.ticketMessages} style={{height:'9rem', border:'1px groove gray',width:'97%',margin:'auto auto',overflowY:'auto',borderRadius:'5px',display:'flex',flexWrap:'nowrap',flexDirection:'column',justifyContent:'flex-start',bottom:'0'}}>
                                         {
                                             read.messages.map((objects: any) => {
                                                 return objects.map((rmsg: any, index: number) => {

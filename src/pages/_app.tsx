@@ -41,12 +41,14 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         .then((res) => {
             if(res.status !== 200 ) {
                 setFetchError(true) 
-                return {error: res.json()}
             }
             return res.json()
         }).then((data) => {
             if(data.error) {
-                removeCookie(uToken)
+              console.log(data.error)
+                removeCookie(uToken, {
+                  path: '/'
+                })
                 setLogged(false)
                 router.replace('/')
             } else {

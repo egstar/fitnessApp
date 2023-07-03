@@ -62,7 +62,7 @@ const SideMenu = ({index, setIndex, setData, data, setPage, PageInfo, isActive, 
                                                                 return (
                                                                     <Link data-sub={true} key={sub.id} href={`/dash/${sub.tree}`} onClick={(e) => tabHandler(e)} className={`${styles.option}`} style={{ textDecoration: 'none', color: '#f2bdae' }} >
                                                                          <li className={`${styles.option} ${PageInfo.sub && isActive == sub.id ? styles.activeOption : null}`}>
-                                                                            <FaIcons.Fa500Px />
+                                                                            <FaIcons.FaArrowRight />
                                                                             <p>{sub.sub}</p>
                                                                         </li>
                                                                     </Link>

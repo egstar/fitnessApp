@@ -179,7 +179,7 @@ export const Settings = ({isUser, setUser,isLoading, setLoading}: any) => {
         }
     }
     
-    if(isLoading) return(<LoadingSpinner />)
+    
 
     return (
         <div className={styles.pagesContent}>

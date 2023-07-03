@@ -68,7 +68,7 @@ export const CreaetPlan = ({isLoading, setLoading}: any) => {
                         planName: userPlans.planName+'-'+(new Date().getTime()).toFixed().toString(),
                         planTasks: [...tasks]
                     })
-                }).then((res) => res )
+                }).then((res) => res.json() )
                 .then((data) => console.log(data))
             } else {
                 fetch('/api/plans/create', {
@@ -82,7 +82,7 @@ export const CreaetPlan = ({isLoading, setLoading}: any) => {
                         planDuration: userPlans.planDuration,
                         planName: userPlans.planName+'-'+(new Date().getTime()).toFixed().toString()
                     })
-                }).then((res) =>  res )
+                }).then((res) =>  res.json() )
                 .then((data) => console.log(data))
 
             }
@@ -161,8 +161,7 @@ export const CreaetPlan = ({isLoading, setLoading}: any) => {
         setPlanDetails(oldUserPlans)
     }
 
-    if (!fetched) (<LoadingSpinner />)
-
+    
     return (
         <>
         <div className={styles.pagesContent}>
@@ -286,7 +285,7 @@ export const CreaetPlan = ({isLoading, setLoading}: any) => {
                                             fetched
                                             ? fetched.defaultT.map((elm: any, index: number) => {
                                                 return (
-                                                    <div key={index}>
+                                                    <div key={index} style={{marginRight:'1.5rem'}}>
                                                         <input data-tid={elm.id} type="checkbox" className="btn-check outlined" name={`task${elm.id}`} onChange={activeTask} id={`task${index}`} value={elm.tname} autoComplete="off" />
                                                         <label className="btn btn-outline-primary" htmlFor={`task${index}`} style={{width:'6.5rem', height:'5rem', overflow:'hidden', textOverflow:'ellipsis',wordBreak:'break-word' }}>{elm.tname}</label>
                                                     </div>
