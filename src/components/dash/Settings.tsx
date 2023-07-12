@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
 import styles from '@/app/styles/profile.module.css'
 import { useRouter } from "next/router"
-import { ErrorAlert } from "../Error"
+import { ErrorAlert } from "@/components/Error"
 import { UserImage } from "./userImage"
 import ValidateForm from "@/models/FormValidation"
 
@@ -36,6 +36,7 @@ export const Settings = ({isUser, setUser,isLoading, setLoading}: any) => {
         };
         reader.onerror = function (error) {
             setErrorMessage({msg: 'Error, cannot handle the file', atype: 'alert-danger'})
+            setTimeout(() => setErrorMessage(), 5000)
         };
         reader.readAsDataURL(file);
     }
@@ -73,18 +74,26 @@ export const Settings = ({isUser, setUser,isLoading, setLoading}: any) => {
     }, [])
     // Image selection via capture button
     function selectFile(e: any) {
+        hiddenInput.current.focus()
         hiddenInput.current.click()
         setUpdateImage(false)
     }
     // On Image change handler
     async function selectedImage(e: any){
-        await getBase64(e.target.files[0]).then(async() =>{
-            const imageBuffer = await fetch(base64Image)
-            const imageBlob = await imageBuffer.blob()
-            const img = URL.createObjectURL(await imageBlob)
-            setUsrImage(img)
-            setNewImage(true)
-        })
+        const mimeTypes = ['image/jpeg','image/png','image/jpg','image/webp']
+        if(mimeTypes.includes(e.target.files[0].type)){
+            await getBase64(e.target.files[0]).then(async() =>{
+                const imageBuffer = await fetch(base64Image)
+                const imageBlob = await imageBuffer.blob()
+                const img = URL.createObjectURL(await imageBlob)
+                setUsrImage(img)
+                setNewImage(true)
+            })
+        } else {
+            setError(true)
+            setErrorMessage({msg: 'Invalid file, please choose supported files only.', atype: 'alert-danger'})
+            setTimeout(() => setErrorMessage(), 5000)
+        }
     }
     // Update image into database directly
     useEffect(() => {
@@ -197,7 +206,7 @@ export const Settings = ({isUser, setUser,isLoading, setLoading}: any) => {
                         { isUser.img ? <UserImage setUser={setUser} isUser={isUser} updateImage={updateImage} setUpdateImage={setUpdateImage}/> : null }
                         <label htmlFor="userImage" onClick={selectFile} className={`form-label ${styles.changeImage}`}><BsIcons.BsCameraFill /> </label>
                     </div>
-                    <input ref={hiddenInput} onChange={selectedImage} className={`form-control form-control-md ${styles.fileSelect}`} id="userImage" type="file"  accept={'.jpg,.png,.jpeg,.svg'} hidden />
+                    <input ref={hiddenInput} onChange={selectedImage} className={`form-control form-control-md ${styles.fileSelect}`} id="userImage" type="file"  accept={'image/x-png,image/jpg,image/jpeg,image/svg,image/webp'} hidden />
                 </div>
                     <div className={styles.pagesContainer_1}>
                     <div className={`input-group`}>

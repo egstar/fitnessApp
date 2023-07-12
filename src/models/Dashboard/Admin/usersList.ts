@@ -23,7 +23,23 @@ export const killUserSession = async(uid: any) => {
         conn.release()
 
         if(!result.rows) throw new Error(result as unknown as any)
-        return result.rows
+        return result.rows[0]
+    } catch(e: any) {
+        return Error(e)
+    }
+}
+
+export const setUserLevel = async(uid: number, lid: number) => {
+    try {
+        const conn = await DbConn.connect()
+        const sQuery = `WITH ulvl AS(UPDATE user_levels SET lid=$1 WHERE uid=$2 RETURNING *),
+                        uss AS(UPDATE user_sessions SET lid=(SELECT lid FROM ulvl) WHERE uid=(SELECT uid from ulvl) RETURNING *)
+                        SELECT * FROM user_levels WHERE uid=$2`
+        const result = await conn.query(sQuery, [lid,uid])
+        conn.release()
+
+        if(!result.rows) throw new Error(result as unknown as any)
+        return result.rows[0]
     } catch(e: any) {
         return Error(e)
     }

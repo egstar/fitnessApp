@@ -1,20 +1,22 @@
 import styles from '@/app/styles/profile.module.css'
 import * as BsIcons from 'react-icons/bs'
 import { useEffect, useRef, useState } from 'react'
-import bootstrap from 'bootstrap'
+import { ErrorAlert } from "@/components/Error"
 
 
-export const AdminUsers = ({setLoading, isLoading}: any) => {
+export const AdminUsers = ({isUser, setLoading, isLoading}: any) => {
     const [usersList, setUsersList]= useState() as any  // User's List
-    const [gotError, setError] = useState() as any  // Error check
-    const [page, setPage] = useState() as any   // Pagination
+    const [errorMessage, setErrorMessage ] = useState() as any
+    const [err, setError] = useState(false)
     const [refresh, setRefresh] = useState(false) // Reload user's list
     const [userAction, setUserAction] =useState() as any
     const [shownPass, setShownPass] = useState(false)
+    const [newUserLevel, setNewUserLevel] = useState() as any
     const passField = useRef() as any
     const actModal = useRef() as any
+    const swconfirm= useRef() as any
     const [newpass, setNewPass] = useState('') as any
-
+    if(!isUser || !usersList) setLoading(true)
     const getUserList = () => fetch('/api/users', {
         method: 'GET',
         headers: {
@@ -22,25 +24,32 @@ export const AdminUsers = ({setLoading, isLoading}: any) => {
         },
         credentials: 'include'
     }).then((res) => {
-        if(res.status != 200) return {error: res.json()}
+        if(res.status != 200) setError(true)
         return res.json()
     }).then((data) => {
         if(data.error){
-            setError(data.error)
+            setErrorMessage({msg:data.error,atype:'alert-danger'})
+            setTimeout(() => setErrorMessage(), 5000)
         } else {
             setUsersList(data)
-
         }
     })
+    useEffect(() => {
+        if(!errorMessage) setError(false)
+    },[errorMessage])
     useEffect(() => {
         if(refresh) {
             getUserList()
             setRefresh(false)
         }
     },[refresh])
+
     useEffect(() => {
         getUserList()
     },[])
+    useEffect(() => {
+        setLoading(false)
+    },[usersList])
 
     function newPass(e: any) {
         setNewPass(e.currentTarget.value)
@@ -67,11 +76,14 @@ export const AdminUsers = ({setLoading, isLoading}: any) => {
             body: JSON.stringify({uid: userAction.uid,newpass})
         }).then((res) => res.json()).then((data) =>{
             if(data.message){
-                console.log(data.message)
+                setErrorMessage({msg:data.message,atype:'alert-success'})
+                setTimeout(() => setErrorMessage(), 5000)
                 const mdlBtn = document.querySelector('#modalClose') as unknown as any
                 mdlBtn.click()
-
-            } else if(data.error){ console.log({error: data.error})}
+            } else if(data.error){
+                setErrorMessage({msg:data.error,atype:'alert-danger'})
+                setTimeout(() => setErrorMessage(), 5000)
+            }
 
         })
 
@@ -80,9 +92,58 @@ export const AdminUsers = ({setLoading, isLoading}: any) => {
         e.currentTarget.focus()
         setShownPass(!shownPass)
     }
+    function chgLevel(e: any) {
+        console.log(e.currentTarget.dataset['uname'],' ', e.currentTarget.dataset['lvl'],' ',e.currentTarget.value)
+        if(e.currentTarget.dataset['lvl'] != e.currentTarget.value){
+            setNewUserLevel({uid: e.currentTarget.dataset['uid'], uname: e.currentTarget.dataset['uname'], lvl: e.currentTarget.value})
+            
+        }
+    }
+    async function setNewLevel(e: any){
+        await fetch('/api/users/userl', {
+            method: 'POST',
+            headers: {
+                'Content-Type':'application/json',
+            },
+            credentials:'include',
+            body: JSON.stringify({uid: newUserLevel.uid, newlvl: newUserLevel.lvl})
+        }).then((res) => res.json()).then((data) => {
+            if(data.message){
+                setErrorMessage({msg:data.message,atype:'alert-success'})
+                setNewUserLevel()
+                setTimeout(() => setErrorMessage(), 5000)
+            } else if(data.error){
+                setErrorMessage({msg:data.error,atype:'alert-danger'})
+                setNewUserLevel()
+                setTimeout(() => setErrorMessage(), 5000)
+            }
+        })
+    }
+    async function endSession(e: any){
+        console.log(e.currentTarget.dataset['uid'])
+
+    }
     
     return(
         <div className={`${styles.pagesContent}`}>
+            {
+                errorMessage  && <ErrorAlert setShow={errorMessage ? true : false} msg={errorMessage!.msg} atype={errorMessage!.atype} />
+            }
+            {
+                newUserLevel && 
+                <div className="toast-container position-fixed top-50 start-50 translate-middle">
+                    
+                    <div ref={swconfirm} id={'liveToast'} className="toast align-items-center show" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div className="d-flex">
+                            <div className="toast-body w-100">
+                                <p>Change user {newUserLevel.uname} level to {newUserLevel.lvl == 4 ? 'CEO' : newUserLevel.lvl == 3 ? 'Admin' : newUserLevel.lvl == 2 ? 'Trainer' : 'Trainee'} ?</p>
+                                <div className={`btn btn-sm btn-secondary`} onClick={() => setNewUserLevel()}>Cancel</div> | <div className={`btn btn-sm btn-success`} onClick={setNewLevel}>Yes</div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            }
             <div ref={actModal} className={`modal modal-sm fade`} id="actionmodal" tabIndex={-1} aria-labelledby="aModalLabel" aria-hidden="true">
                 <div className={`modal-dialog`}>
                 {userAction && <div className={`modal-content`}>
@@ -132,9 +193,9 @@ export const AdminUsers = ({setLoading, isLoading}: any) => {
                     </thead>
                     <tbody>
                         {
-                            usersList && usersList.map((usr: any, index:number) => {
+                            isUser && usersList && usersList.map((usr: any, index:number) => {
                                 return(
-                                    <tr key={index} className={`${styles.usersDetails}`}>
+                                    <tr key={index} className={`${styles.usersDetails} ${Number(isUser.uid) === Number(usr.uid) ? styles.myUser : null}`}>
                                         <td className={``}>
                                             {usr.uid}
                                         </td>
@@ -148,16 +209,26 @@ export const AdminUsers = ({setLoading, isLoading}: any) => {
                                             {usr.email}
                                         </td>
                                         <td className={``} title={usr.lid == 4 ? 'CEO' : usr.lid == 3 ? 'Admin' : usr.lid == 2 ? 'Trainer' : 'Trainee'}>
-                                            <select className={`form-select form-select-sm ${styles.lvlSelect}`} defaultValue={usr.lid}>
+                                            <select onChange={chgLevel} data-uid={usr.uid} data-uname={usr.uname} data-lvl={usr.lid} className={`form-select form-select-sm ${styles.lvlSelect}`} defaultValue={usr.lid} disabled={
+                                                isUser.lid < 4
+                                                    ? isUser.uid === usr.uid 
+                                                        ? true 
+                                                        : isUser.lid <= usr.lid 
+                                                            ? true 
+                                                            : isUser.lid < 4 && usr.lid > 3 
+                                                                ? true 
+                                                                : false 
+                                                    : false
+                                            }>
                                                 <option value={1}>Trainee</option>
                                                 <option value={2}>Trainer</option>
                                                 <option value={3}>Admin</option>
-                                                <option value={4}>CEO</option>
+                                                <option value={4} disabled={isUser.lid < 4 ? true : false}>CEO</option>
                                             </select>
                                         </td>
                                         <td className={``}>
                                             {usr.sid && new Date(usr.sexpiry) > new Date() 
-                                            ?  (<div className={`btn btn-sm  ${styles.killSession}`}>
+                                            ?  (<div data-uid={usr.uid} className={`btn btn-sm  ${isUser.uid == usr.uid ? null : styles.killSession}`} onClick={endSession}>
                                                     <span className={`${styles.sessionExp}`}>{new Date(usr.sexpiry).toLocaleString('en-UK',{day:'2-digit',month:'2-digit',formatMatcher:'best fit'}) + ' ' + new Date(usr.sexpiry).toLocaleString('en-UK',{timeStyle:'short'})}</span>
                                                     <BsIcons.BsFillSignStopFill className={`${styles.stopSign}`} />
                                                 </div>)
@@ -166,9 +237,9 @@ export const AdminUsers = ({setLoading, isLoading}: any) => {
                                         <td className={``} title={new Date(usr.regdate).toLocaleString('en-UK')}>
                                             {new Date(usr.regdate).toLocaleString('en-UK', {weekday:'short',day:'2-digit',month:'short',year:'numeric'})}
                                         </td>
-                                        <td className={``}>                                                
-                                            <span data-bs-toggle="modal" data-bs-target="#actionmodal" onClick={chgUserPass} data-uid={usr.uid} data-uname={usr.uname} className={`btn btn-sm btn-secondary`} title={'Change password'}><BsIcons.BsShieldLock /> </span>
-                                            <span data-bs-toggle="modal" data-bs-target="#actionmodal" onClick={delUser} data-uid={usr.uid} data-uname={usr.uname} className={`btn btn-sm btn-danger`} title={'Delete user'} style={{marginLeft:'5px'}}><BsIcons.BsX /> </span>
+                                        <td className={``}>
+                                            <span data-bs-toggle={isUser.uid === usr.uid ? null : isUser.lid <= usr.lid ? null : "modal"} data-bs-target="#actionmodal" onClick={(e) => isUser.uid === usr.uid ? null : isUser.lid <= usr.lid ? null : isUser.lid < 4 ? null : chgUserPass(e)} data-uid={usr.uid} data-uname={usr.uname} className={`btn btn-sm btn-secondary`} title={'Change password'}><BsIcons.BsShieldLock /> </span>
+                                            <span data-bs-toggle={isUser.uid === usr.uid ? null : isUser.lid <= usr.lid ? null : "modal"} data-bs-target="#actionmodal" onClick={(e) => isUser.uid === usr.uid ? null : isUser.lid <= usr.lid ? null : isUser.lid < 4 ? null : delUser(e)} data-uid={usr.uid} data-uname={usr.uname} className={`btn btn-sm btn-danger`} title={'Delete user'} style={{marginLeft:'5px'}}><BsIcons.BsX /> </span>
                                         </td>
                                     </tr>
                                 )

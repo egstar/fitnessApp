@@ -22,7 +22,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const passEncrypt = npass+"b0rh4ms0l1m4n"+cryptoSalt
         const uName= await updatePassword(uid,passEncrypt)
         if(!uName) res.status(300).json({error: `Error changing user password`})
-        res.status(200).json({message: `User ${uid} password has been changed`})
+        res.status(200).json({message: `User with ID ( ${uid} ) password has been changed`})
     } else {
         res.status(404).json({error: `Not found`})
     }
