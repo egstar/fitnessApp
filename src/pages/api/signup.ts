@@ -9,7 +9,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if(req.method === 'GET'){
         res.status(403).redirect('/signup')
     }
-    if(req.method === 'POST' && req.headers.origin === env.WEBSITE){
+    if(req.method === 'POST' && req.headers.origin === env.WEBSITE!){
         const {uname, fname, lname, email, userpass} = req.body
         const fUser = await findUser(uname)
         if(fUser){
