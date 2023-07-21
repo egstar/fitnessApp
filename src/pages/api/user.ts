@@ -6,7 +6,7 @@ import * as env from "@/data/config";
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<User|any> {
-    if(req.method !== 'POST' && req.headers.origin !== env.WEBSITE ){
+    if(req.method !== 'POST' && req.headers.origin !== env.WEBSITE! ){
         res.status(400).json({error: 'Error, Access denied'})
     }
     const userLogged = req.cookies![env.uToken]
