@@ -126,7 +126,6 @@ const signUpHandler = async(e:any) => {
   e.preventDefault()
 
   if(e.currentTarget.classList.contains('was-validated')){
-    console.log(e.currentTarget.uname.classList)
     const user = {
       uname: e.currentTarget.uname.value as string,
       fname: e.currentTarget.fname.value as string,
@@ -134,7 +133,8 @@ const signUpHandler = async(e:any) => {
       email: e.currentTarget.email.value as string,
       userpass: e.currentTarget.userpass.value as string,
     }
-    fetch('/api/signup', {
+    console.log(user)
+    await fetch('/api/signup', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

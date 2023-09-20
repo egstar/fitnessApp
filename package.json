@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && db-migrate up",
+    "build": "npm i && next build && db-migrate up",
     "start": "next start",
     "lint": "next lint"
   },
