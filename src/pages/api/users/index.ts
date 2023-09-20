@@ -7,19 +7,17 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse){
-    // if(req.headers.origin != env.WEBSITE) res.status(400).json(`Access denied`)
+    if(req.method !== 'GET' && req.headers.origin !== env.WEBSITE!) return res.status(400).json(`Connection refused`)
 
-    if(!req.cookies || !req.cookies![uToken]) res.status(403).json(`Access denied`)
+    if(!req.cookies || !req.cookies![uToken]) return res.status(403).json({error:`Access denied`})
 
     const isAdmin = await getSession(req.cookies[uToken]!)
-    if(!isAdmin || (isAdmin && isAdmin.lid < 3)) res.status(300).json(`Only admins are premitted to do this action`)
+    
+    if(!isAdmin || (isAdmin && isAdmin.lid < 3)) return res.status(300).json({error:`Only admins are premitted to do this action`})
     if(req.method == 'GET'){
-
         const usrList = await getAllUsers()
-        if(!usrList) res.status(300).json(`Error fetching users`)
-        
-        res.status(200).json(usrList)
-
+        if(!usrList) res.status(300).json({error:`Error fetching users`})
+        return res.status(200).json(usrList)
     }
     
 }

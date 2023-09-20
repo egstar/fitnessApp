@@ -52,5 +52,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         } else {
             res.status(200).json({message: `User has been created successfully.`})
         }
+    } else {
+        res.status(403).json({message: `Error Different Origin`})
     }
 }

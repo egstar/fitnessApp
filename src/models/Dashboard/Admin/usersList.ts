@@ -4,7 +4,7 @@ import DbConn from "@/data/Database"
 export const getAllUsers = async() => {
     try {
         const conn = await DbConn.connect()
-        const sQuery = 'SELECT * FROM user_sessions AS us RIGHT JOIN users ON users.id=uid INNER JOIN user_levels AS ul ON users.id=ul.uid ORDER BY id ASC'
+        const sQuery = 'SELECT DISTINCT * FROM user_sessions AS us RIGHT JOIN users ON users.id=uid LEFT JOIN user_levels AS ul ON users.id=ul.uid ORDER BY users.id ASC'
         const result = await conn.query(sQuery)
         conn.release()
 

@@ -2,9 +2,11 @@ import styles from '@/app/styles/profile.module.css'
 import * as BsIcons from 'react-icons/bs'
 import { useEffect, useRef, useState } from 'react'
 import { ErrorAlert } from "@/components/Error"
+import { useRouter } from 'next/router'
 
 
 export const AdminUsers = ({isUser, setLoading, isLoading}: any) => {
+    const router = useRouter()
     const [usersList, setUsersList]= useState() as any  // User's List
     const [errorMessage, setErrorMessage ] = useState() as any
     const [err, setError] = useState(false)
@@ -28,6 +30,7 @@ export const AdminUsers = ({isUser, setLoading, isLoading}: any) => {
         return res.json()
     }).then((data) => {
         if(data.error){
+            if(data.error == "Only admins are premitted to do this action") router.reload()
             setErrorMessage({msg:data.error,atype:'alert-danger'})
             setTimeout(() => setErrorMessage(), 5000)
         } else {
@@ -48,8 +51,9 @@ export const AdminUsers = ({isUser, setLoading, isLoading}: any) => {
         getUserList()
     },[])
     useEffect(() => {
-        setLoading(false)
-    },[usersList])
+
+        if(!err) setLoading(false)
+    },[usersList,err])
 
     function newPass(e: any) {
         setNewPass(e.currentTarget.value)
@@ -120,7 +124,7 @@ export const AdminUsers = ({isUser, setLoading, isLoading}: any) => {
         })
     }
     async function endSession(e: any){
-        console.log(e.currentTarget.dataset['uid'])
+        
 
     }
     
@@ -230,7 +234,7 @@ export const AdminUsers = ({isUser, setLoading, isLoading}: any) => {
                                             {usr.sid && new Date(usr.sexpiry) > new Date() 
                                             ?  (<div data-uid={usr.uid} className={`btn btn-sm  ${isUser.uid == usr.uid ? null : styles.killSession}`} onClick={endSession}>
                                                     <span className={`${styles.sessionExp}`}>{new Date(usr.sexpiry).toLocaleString('en-UK',{day:'2-digit',month:'2-digit',formatMatcher:'best fit'}) + ' ' + new Date(usr.sexpiry).toLocaleString('en-UK',{timeStyle:'short'})}</span>
-                                                    <BsIcons.BsFillSignStopFill className={`${styles.stopSign}`} />
+                                                    <BsIcons.BsXCircle className={`${styles.stopSign}`} />
                                                 </div>)
                                             : '-'}
                                         </td>

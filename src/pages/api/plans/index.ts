@@ -29,18 +29,12 @@ export default async function handler(req:NextApiRequest, res: NextApiResponse){
         let doneTasks: any = {};
         const tasksLists: {} = planTasks.reduce((plans: any,tsks: any) =>{ 
             doneTasks = {...doneTasks, [tsks.tname]: Number([doneTasks[tsks.tname]? doneTasks[tsks.tname]+Number(tsks.tstatus): +Number(tsks.tstatus)])}
-            
-        return ({
-            ...plans,
-            [tsks.tdate]: [...(plans[tsks.tdate] || []), tsks]
-        })
-        
+            return ({
+                ...plans,
+                [tsks.tdate]: [...(plans[tsks.tdate] || []), tsks]
+            })
         }, {})
-        
-        planTask.push({plan: userPlans[i].pname, planStart: userPlans[i].pstart, planDuration: userPlans[i].pduuration, planEnd: new Date(new Date(userPlans[i].pstart).valueOf() + (1000 * 60 * 60 * 24 * userPlans[i].pduration)) , planStates: {tasksDone: doneTasks, totalDone: tasksAvg!, totalTasks: planTasks.length}, tasks: tasksLists})
+        planTask.push({plan: userPlans[i].pname, pid: userPlans[i].pid, planStart: userPlans[i].pstart, planDuration: userPlans[i].pduuration, planEnd: new Date(new Date(userPlans[i].pstart).valueOf() + (1000 * 60 * 60 * 24 * userPlans[i].pduration)) , planStates: {tasksDone: doneTasks, totalDone: tasksAvg!, totalTasks: planTasks.length}, tasks: tasksLists})
     }
-    
-     res.status(200).json(planTask)
-
-
+    res.status(200).json(planTask)
 }

@@ -1,8 +1,6 @@
-import { User } from "@/data/types"
 import * as BsIcons from 'react-icons/bs'
 import LoadingSpinner from "../Loading"
 import { useEffect, useRef, useState } from "react"
-import Image from "next/image"
 import styles from '@/app/styles/profile.module.css'
 import { useRouter } from "next/router"
 import { ErrorAlert } from "@/components/Error"
@@ -187,6 +185,13 @@ export const Settings = ({isUser, setUser,isLoading, setLoading}: any) => {
             })
         }
     }
+    function planSettings(pid: any){
+        console.log(pid)
+        
+    }
+    function delPlan(pid: any){
+        console.log(pid)
+    }
     
     
 
@@ -290,7 +295,7 @@ export const Settings = ({isUser, setUser,isLoading, setLoading}: any) => {
                         ? plans.map((pl: any, index:number) => {
                             return (
                                 <li key={index} className={`row g-0 ${styles.planList}`} data-pid={pl.tasks.pid}>
-                                    <span className={`col-10 ${styles.planLine}`} >{pl.plan}</span><span className={`col-2 ${styles.planLineTools}`} ><BsIcons.BsGearFill className={`${styles.planIcons}`} style={{color:'gray'}} /> <BsIcons.BsXCircleFill fill="darkred" className={`${styles.planIcons}`} /> </span>
+                                    <span className={`col-10 ${styles.planLine}`} >{pl.plan}</span><span className={`col-2 ${styles.planLineTools}`} ><BsIcons.BsGearFill className={`${styles.planIcons}`} style={{color:'gray'}} onClick={() => planSettings(pl!.pid)}/> <BsIcons.BsXCircleFill fill="darkred" className={`${styles.planIcons}`} onClick={() => delPlan(pl!.pid)}/> </span>
                                 </li>
                             )
                         })

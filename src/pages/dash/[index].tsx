@@ -56,6 +56,10 @@ export default function Profile({isUser, setUser,isLogged, setLogged, cookies, s
                     }
                 })
                 setData(dt)
+            } else {
+                removeCookie(uToken, {
+                    path: '/'
+                  })
             }
         })
         setMenu(true)

@@ -10,8 +10,7 @@ import { uToken } from "@/data/config";
 
 const jwtToken = Config.JWT_SECRET
 export const setCookie = async(res:NextApiResponse, gUser: User): Promise<string> => {
-    const cookie = await createCookie(gUser)
-    
+    const cookie = await createCookie(gUser)    
     return cookie
 }
 export const createCookie = async(gUser: User): Promise<any> => {
@@ -19,6 +18,7 @@ export const createCookie = async(gUser: User): Promise<any> => {
     const mxAge: number = 60 * 60 * 24
     const obj = {...gUser, sissue, mxAge}
     const token = await Iron.seal(obj, jwtToken!, Iron.defaults)
+    await unsetSession(gUser.id!)
     const cookie = serialize(uToken, token, {
         maxAge: mxAge,
         expires: new Date(Date.now() + mxAge * 1000),
@@ -27,9 +27,9 @@ export const createCookie = async(gUser: User): Promise<any> => {
         path: '/',
         sameSite: 'lax',
     })
-    await unsetSession(gUser.id!)
+    
     await setSession(token, gUser.id!, gUser.lid!)
-    await parse(cookie || '')
+    parse(cookie || '')
     return cookie
 }
 

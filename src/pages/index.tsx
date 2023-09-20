@@ -11,6 +11,7 @@ import ValidateForm from '@/models/FormValidation';
 import styles from '@/app/styles/profile.module.css'
 import LoadingSpinner from '@/components/Loading';
 import { useCookies } from 'react-cookie';
+import { ErrorAlert } from '@/components/Error';
 
 
 export const uToken: string = "tfindothekmissingehiddenn"
@@ -27,8 +28,11 @@ const Index = () => {
   const [userNull, setNullUser] = useState(false)
   const [menu, setMenu] = useState({href: '#login',toggle: true,modal: true}) as any
   const [isLoading, setLoading] = useState(false)
+  const [formLoading, setFormLoading] = useState(false)
   const [cookies, setCookie, removeCookie] = useCookies([uToken])
   const [inputFeedBack, setInputFeedBack] = useState() as any
+  const [errorMessage, setErrorMessage ] = useState() as any
+  const [err, setError] = useState(false)
   const newPass = useRef() as any
   const emailPattern = /[A-Za-z0-9._%+-]{1,}@[a-zA-Z]{1,}([.]{1}[a-zA-Z.]{1,}|[.]{1}[a-zA-Z]{1,}[.]{1}[a-zA-Z]{2,})/
 
@@ -42,7 +46,7 @@ const loginHandler = (e: any) => {
   }
   setUser(userInput)
   setNullUser(true)
-  setLoading(true)
+  setFormLoading(true)
 }
 
 const validateForm = (e: any) => {
@@ -134,6 +138,7 @@ const signUpHandler = async(e:any) => {
       email: e.currentTarget.email.value as string,
       userpass: e.currentTarget.userpass.value as string,
     }
+    setFormLoading(true)
     fetch('/api/signup', {
       method: 'POST',
       headers: {
@@ -141,18 +146,28 @@ const signUpHandler = async(e:any) => {
       },
       body: JSON.stringify({...user})
     }).then((res) => {
-      if(res.status == 200) return res.json()
-      return {error: res.json()}
+      setFormLoading(false)
+      if(res.status !== 200) return {error: res.json()}
+      return res.json()
     }).then((data) => {
-      if(data.error) console.log(data.error)
-      console.log(data)
+      if(data.error){
+        setErrorMessage({msg:data.error,atype:'alert-danger'})
+        setTimeout(() => setErrorMessage(), 5000)
+      } else {
+        setErrorMessage({msg:data.message,atype:'alert-success'})
+        setTimeout(() => setErrorMessage(), 5000)
+        const mdlBtn = document.querySelector('#modalClose') as unknown as any
+        mdlBtn.click()
+      }
     })
+
     
   } else {
     ValidateForm()
   }
 }
   useEffect(() => {
+    setFormLoading(true)
     if(userNull){
     fetch('/api/login', {
       method: 'POST',
@@ -160,6 +175,7 @@ const signUpHandler = async(e:any) => {
       body: JSON.stringify(myUser)
     })
     .then((res) => {
+      setFormLoading(false)
       if(res.status !== 200){
         throw new Error(`${res.json()}`)
       }
@@ -172,10 +188,10 @@ const signUpHandler = async(e:any) => {
       router.prefetch('/dash/[index]')
       
       window.location.href = '/dash/home'
-      setLoading(false)
     })
     setNullUser(false)
     }
+    setFormLoading(false)
 }, [myUser])
 
 useEffect(() => {
@@ -197,9 +213,15 @@ const signOut = async() => {
   setLoading(false)
   router.reload()
 }
+useEffect(() => {
+  if(!errorMessage) setError(false)
+},[errorMessage])
 if(isLoading) return (<LoadingSpinner />)
     return (
       <main className={`${roboto.className}`}>
+        {
+          errorMessage  && <ErrorAlert setShow={errorMessage ? true : false} msg={errorMessage!.msg} atype={errorMessage!.atype} />
+        }
         <header>
             <nav className="navbar fixed-top navbar-expand-lg">
                 <div className="container-fluid w-100">
@@ -295,7 +317,7 @@ if(isLoading) return (<LoadingSpinner />)
                                                             
                                                         </div>
                                                         <div className="col-12">
-                                                            <button type="submit" className="lgbtn">Login</button>
+                                                            <button type="submit" className="lgbtn" disabled={formLoading? true : false}>Login</button>
                                                         </div>
                                                         <span className="pass-forget"><a href="#forget?">Forget password?</a></span>
                                                     </form>
@@ -312,7 +334,8 @@ if(isLoading) return (<LoadingSpinner />)
                                               <div className="modal-content">
                                                 <div className="modal-body">
                                                   <div className="login-header">
-                                                    Sign up
+                                                    <h5>Sign up</h5>
+                                                    <button id="modalClose" style={{visibility:'hidden'}} type="button" className={`btn-close`} data-bs-dismiss="modal" aria-label="Close"></button>
                                                   </div>
                                                   <div className="login-form">
                                                     <form id="signupform" className="row g-0 needs-validation" onSubmit={signUpHandler} noValidate>
@@ -384,7 +407,7 @@ if(isLoading) return (<LoadingSpinner />)
                                                           </div>
                                                           
                                                         <div className="col-12">
-                                                            <button type="submit" className="lgbtn">Sign up</button>
+                                                            <button type="submit" className="lgbtn" disabled={formLoading? true : false}>Sign up</button>
                                                         </div>
                                                     </form>
                                                   </div>
