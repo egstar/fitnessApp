@@ -13,6 +13,17 @@ export const getTickets = async(uid: number): Promise<any> => {
     }
 }
 
+export const getAdminTickets = async(): Promise<any> => {
+    try {
+        const conn = await DbConn.connect()
+        const sQuery = `SELECT (SELECT COUNT(*) from support where status=0) AS open, (SELECT COUNT(*) from support where status=1) AS closed, (SELECT COUNT(*) from support where status=2) AS solvd, uid,topic,cat,status,tm.* from support AS sp INNER JOIN ticket_messages AS tm on sp.id=tm.ticket_id ORDER BY status ASC`
+        const result = await conn.query(sQuery)
+        
+    } catch(e: any) {
+        return 
+    }
+}
+
 export const createTicket = async(uid: number, desc: string, cat: string,msg :string): Promise<any> => {
     try {
         const conn = await DbConn.connect()

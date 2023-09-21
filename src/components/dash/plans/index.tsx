@@ -244,11 +244,7 @@ export const CreaetPlan = ({isLoading, setLoading}: any) => {
                         <div className={`${styles.pagesContainer_1}`}>
                                 <label htmlFor="datePicker">Starting date</label>
                                 <button id="datePicker" className="btn btn-sm btn-success" onClick={handleDateClick} style={{ padding:'1rem 0'}} >
-                                        {startDate.toLocaleDateString('en-UK', {
-                                            day:'2-digit',
-                                            month:'2-digit',
-                                            year:'numeric'
-                                        })}
+                                        {startDate.toLocaleDateString('en-GB')}
                                 </button>
                             
                         </div>

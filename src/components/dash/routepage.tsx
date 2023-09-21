@@ -8,6 +8,7 @@ import { CreaetPlan } from './plans';
 import { Settings } from './Settings';
 import { Support } from './support';
 import { AdminUsers } from './admin/users';
+import AdminSupport from './admin/support';
 
 
 
@@ -16,11 +17,11 @@ export default function DashPage({PageInfo, isUser, setUser, setLoading, isLoadi
 
     const Menu = ({Page}: any) => {
         const Pages:any = {
-            'admin/users': <AdminUsers setLoading={setLoading} isLoading={isLoading} isUser={isUser} setUser={setUser} />,
-            'admin/plans': null,
-            'admin/menu': null,
-            'admin/tasks': null,
-            'admin/support': null
+            'admin#users': <AdminUsers setLoading={setLoading} isLoading={isLoading} isUser={isUser} setUser={setUser} />,
+            'admin#plans': null,
+            'admin#menu': null,
+            'admin#tasks': null,
+            'admin#support': <AdminSupport setLoading={setLoading} isLoading={isLoading} isUser={isUser} setUser={setUser} />
         }
         
         return Pages[Page]
