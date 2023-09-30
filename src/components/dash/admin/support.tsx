@@ -63,7 +63,7 @@ const AdminSupport = ({isUser, setLoading, isLoading}: any) => {
                     </thead>
                         {supportTickets && Object.entries(supportTickets).map((a: any,i: any) => {
                             return (
-                                <tbody>
+                                <tbody key={i}>
                                 { a[0] === 'utickets' && Object.entries(a[1]).map((a:any, b:any) => {
 
                                     return (<tr key={b} >
