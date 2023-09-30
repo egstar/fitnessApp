@@ -24,6 +24,7 @@ export default function DashPage({PageInfo, isUser, setUser, setLoading, isLoadi
             'admin#support': <AdminSupport setLoading={setLoading} isLoading={isLoading} isUser={isUser} setUser={setUser} />
         }
         
+        
         return Pages[Page]
     }
     
