@@ -50,7 +50,8 @@ export default function DashPage({PageInfo, isUser, setUser, setLoading, isLoadi
                                         : PageInfo.tree == 'users'
                                         ? (<>Users List</>)
                                         : PageInfo.tree && PageInfo.tree.includes('admin')
-                                        ? (<Menu Page={PageInfo.tree} />)
+                                        ? PageInfo.tree == 'admin#users' ? <AdminUsers setLoading={setLoading} isLoading={isLoading} isUser={isUser} setUser={setUser} />
+                                            : PageInfo.tree == 'admin#support' ? <AdminSupport setLoading={setLoading} isLoading={isLoading} isUser={isUser} setUser={setUser} /> : null
                                         : (<CreaetPlan  setLoading={setLoading} isLoading={isLoading} />)
                 : (<><div className={styles.pagesContent}>
                     <div className={styles.pagesContainer}>
