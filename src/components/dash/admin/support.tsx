@@ -1,10 +1,8 @@
 import styles from '@/app/styles/profile.module.css'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import * as BsIcons from 'react-icons/bs';
 import * as FaIcons from 'react-icons/fa';
-import { UserImage } from '../userImage';
-import LoadingSpinner from '@/components/Loading';
-import { stringify } from 'querystring';
+
 
 const AdminSupport = ({isUser, setLoading, isLoading}: any) => {
     const [supportTickets, setSupportTickets] = useState({}) as any
