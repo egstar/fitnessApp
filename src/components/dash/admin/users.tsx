@@ -18,7 +18,9 @@ export const AdminUsers = ({isUser, setLoading, isLoading}: any) => {
     const actModal = useRef() as any
     const swconfirm= useRef() as any
     const [newpass, setNewPass] = useState('') as any
-    if(!isUser || !usersList) setLoading(true)
+    useEffect(() => {
+        if(!isUser || !usersList) setLoading(true)
+    },[isUser,!usersList])
     const getUserList = () => fetch('/api/users', {
         method: 'GET',
         headers: {

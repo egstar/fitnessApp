@@ -3,7 +3,7 @@ import DbConn from "@/data/Database"
 export const getTickets = async(uid: number): Promise<any> => {
     try {
         const conn = await DbConn.connect()
-        const sQuery = `SELECT (SELECT COUNT(*) from support where uid=$1) AS total,(SELECT COUNT(*) from support where uid=$1 AND status=0) AS open, (SELECT COUNT(*) from support where uid=$1 AND status=1) AS closed, (SELECT COUNT(*) from support where uid=$1 AND status=2) AS solvd, uid,topic,cat,status,tm.* from support AS sp INNER JOIN ticket_messages AS tm on sp.id=tm.ticket_id WHERE uid=$1 ORDER BY status ASC`
+        const sQuery = `SELECT (SELECT COUNT(*) from support where uid=$1) AS total,(SELECT COUNT(*) from support where uid=$1 AND status=0) AS open, (SELECT COUNT(*) from support where uid=$1 AND status=1) AS closed, (SELECT COUNT(*) from support where uid=$1 AND status=2) AS solvd, uid,topic,cat,status,tm.* from support AS sp INNER JOIN ticket_messages AS tm on sp.id=tm.ticket_id WHERE uid=$1 ORDER BY status DESC, tdate DESC`
         const result = await conn.query (sQuery, [uid])
         conn.release()
         if(!result.rows) throw new Error(`${result}`)

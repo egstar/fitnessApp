@@ -3,25 +3,32 @@ import { useEffect, useRef, useState } from 'react'
 import * as BsIcons from 'react-icons/bs';
 import * as FaIcons from 'react-icons/fa';
 import { UserImage } from '../userImage';
-import LoadingSpinner from '@/components/Loading';
 export const Support = ({isUser, setLoading, isLoading}:any) => {
     
     const [tickets, setTickets] = useState() as any
     const [read, setRead] = useState() as any
     const [newE, setNewE] = useState(false)
+    const [disabled, setDisabled] = useState(true)
     const [newTkt, setNewTicket] = useState() as any
+    const sendButton = useRef() as any
     const ticketMsgs = useRef() as any
     const readingPanel = useRef() as any
     const rplyBox = useRef() as any
+    const modalClose = useRef() as any
+    const cpyToolTip = useRef() as any
 
 
     useEffect(() => {
         if(read && newE){
-            
+            setLoading(true)
+        } else {
+            setLoading(false)
         }
-        
         setNewE(false)
     },[newE])
+    const newMessage = () => {
+        rplyBox.current.value.length > 3 ? setDisabled(false) : setDisabled(true) 
+    }
 
     useEffect(() => {
         fetch('/api/support', {
@@ -34,10 +41,13 @@ export const Support = ({isUser, setLoading, isLoading}:any) => {
         }).then((res) => res.json()).then((data) => {
             if(data.utickets) setTickets(data)
         })
-        setNewTicket(false)
+        
         setLoading(false)
+        
     },[newTkt])
-
+    useEffect(() => {
+        if(tickets) setLoading(false)
+    },[tickets])
     function readMessages(e: any) {
         setRead({
             id: Number(e.currentTarget.dataset.ticketid),
@@ -49,6 +59,7 @@ export const Support = ({isUser, setLoading, isLoading}:any) => {
     useEffect(() => {
         if(read) ticketMsgs.current.scrollTop = Number(ticketMsgs.current.scrollHeight) + 100
     },[read])
+
     function submitReply(e: any) {
         e.preventDefault()
         setNewE(true)
@@ -77,6 +88,7 @@ export const Support = ({isUser, setLoading, isLoading}:any) => {
                 message: data.message,
                 date: new Date(data.tdate)
             }})
+            updateTickets({tid: read.id, uid: Number(isUser.uid), status:0})
             setRead(currentTopic)
             ticketMsgs.current.scrollTop = Number(ticketMsgs.current.scrollHeight) + 100
             setNewE(false)
@@ -103,44 +115,88 @@ export const Support = ({isUser, setLoading, isLoading}:any) => {
             if(res.status != 200) return {error: res.json()}
             return res.json()
         }).then((data) => {
-            if(data.error) console.log('error: ',data.error)
+            if(data.error) return {error:data.error}
             setNewTicket(true)
+            setTimeout(() => {
+                modalClose.current.click()
+                setNewTicket(false)
+    
+            },3000)
         })
     }
+
+    const updateTickets = ({tid,uid,status}: any ) => {
+        fetch('/api/support', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+                ticketUpdate: {tid,uid,status}
+            })
+        }).then((res) => {
+            if(res.status != 200) return {error: res.json()}
+            return res.json()
+        }).then((data) => {
+            setNewTicket(true)
+            setRead({...read, status})
+            setTimeout(() => {
+                setNewTicket(false)
+            },1000)
+        })
+    }
+    const copyTicketId = () => {
+
+        cpyToolTip.current.innerText = `Ticket ID ${read.id} copied`
+        navigator.clipboard.writeText(read.id)
+        setTimeout(()=> {
+            cpyToolTip.current.innerText = 'Copy'
+        },1000)
+    }
+
     return (
         <div className={`row g-0 ${styles.pagesContent}`} style={{height:'max-content'}}>
-            
             <div className={`modal fade}`} id="cnewticket" tabIndex={-1} aria-labelledby="newticketmodal" aria-hidden="true">
                 <div className="modal-dialog">
                     <div className="modal-content">
+                        <div className='modal-head' style={{background:'lightgray',color:'black'}}>
+                            <span className={`${styles.newTicketModalHeader}`}>
+                                Support Request 
+                            </span>
+                            <span className='btn btn-sm btn-close' ref={modalClose} data-bs-dismiss="modal" data-bs-target="#cnewticket" style={{position:'absolute',right:'.5rem'}}></span>
+                        </div>
                         <div className="modal-body">
-                            <div className={`${styles.newTicketModalHeader}`}>
-                                Support Request
-                            </div>
-                            <div className={`${styles.tkModal}`}>
-                                <form id='submitnewticket' onSubmit={submitNewTicket}>
-                                    <div className="form-floating mb-3">
-                                        <input type="text" className="form-control" name="desc" id="desc" placeholder="Topic" required style={{background:'darkgray',boxShadow:'none',border:'none',outline:'none'}}/>
-                                        <label htmlFor="desc">Topic</label>
-                                    </div>
-                                    <div className="form-floating mb-3">
-                                        <select className="form-select form-select-sm" defaultValue={0} aria-label=".form-select-sm cat" name="cat" id="cat" placeholder="Categorey" required  style={{color:'#583b63',boxShadow:'none',border:'none',outline:'none'}}>
-                                            <option value={0} disabled>Select Categorey</option>
-                                            <option>General</option>
-                                            <option>Critical</option>
-                                            <option>Other</option>
-                                        </select>
-                                        <label htmlFor="cat" style={{color:'black'}}>Categorey</label>
-                                    </div>
-                                    <div className="form-floating mb-3">
-                                        <textarea className={`form-control ${styles.newTicketAreaBox}`} name="msg" id="msg" placeholder="Your message" rows={3} required style={{height:'8rem',background:'darkgray',resize:'none'}}/>
-                                        <label className={`${styles.msgDescription}`} htmlFor="msg">Describe your issue</label>
-                                    </div>
-                                    <div className={`input-group`}>
-                                        <input className={`form-control btn btn-success`} type='submit' name='submit' value='Create ticket' />
-                                    </div>
-                                </form>
-                            </div>
+                            
+                            {
+                                newTkt == true
+                                ? <div className={`${styles.tkModal}`}>Your request has been submitted and our team will reply you as soon as they review your request.<br /> Thank you.</div>
+                                : <div className={`${styles.tkModal}`}>
+                                    <form id='submitnewticket' onSubmit={submitNewTicket}>
+                                        <div className="form-floating mb-3">
+                                            <input type="text" className="form-control" name="desc" id="desc" placeholder="Topic" required style={{background:'darkgray',boxShadow:'none',border:'none',outline:'none'}}/>
+                                            <label htmlFor="desc">Topic</label>
+                                        </div>
+                                        <div className="form-floating mb-3">
+                                            <select className="form-select form-select-sm" defaultValue={0} aria-label=".form-select-sm cat" name="cat" id="cat" placeholder="Categorey" required  style={{color:'#583b63',boxShadow:'none',border:'none',outline:'none'}}>
+                                                <option value={0} disabled>Select Categorey</option>
+                                                <option>General</option>
+                                                <option>Critical</option>
+                                                <option>Other</option>
+                                            </select>
+                                            <label htmlFor="cat" style={{color:'black'}}>Categorey</label>
+                                        </div>
+                                        <div className="form-floating mb-3">
+                                            <textarea className={`form-control ${styles.newTicketAreaBox}`} name="msg" id="msg" placeholder="Your message" rows={3} required style={{height:'8rem',background:'darkgray',resize:'none'}} />
+                                            <label className={`${styles.msgDescription}`} htmlFor="msg">Describe your issue</label>
+                                        </div>
+                                        <div className={`input-group`}>
+                                            <input className={`form-control btn btn-success`} type='submit' name='submit' value='Create ticket' />
+                                        </div>
+                                    </form>
+                                </div>
+                            }
+
                         </div>
                     </div>
                 </div>
@@ -172,7 +228,7 @@ export const Support = ({isUser, setLoading, isLoading}:any) => {
                     <span style={{position:'sticky',top:0,background:'lightgray',borderRadius:'12px 12px 0 0'}}>User Support tickets</span>
                     <ul className={styles.ticketsList}>
                         {
-                            tickets && Object.entries(tickets.utickets).map((tickeet: any, index:number) => {
+                            tickets && Object.entries(tickets.utickets).reverse().sort((a: any,b: any) => {return a[1][0].status - b[1][0].status}).map((tickeet: any, index:number) => {
                                 let tk= tickeet[1][0]
                                 
                                 return(
@@ -183,8 +239,7 @@ export const Support = ({isUser, setLoading, isLoading}:any) => {
                                     data-ticketid={tk.id}
                                     data-status={tk.status} 
                                     data-ticket={tk.desc}
-                                    data-messages={tk.messages}
-                                    >
+                                    data-messages={tk.messages}>
                                         <div className={styles.ticketDetails}>
                                             <span className={`col-3 ${styles.ticketStatus}`} style={{background:`${tk.status == 0 ? 'darkorange' : tk.status == 2 ? 'darkgreen' : 'maroon'}`}}>
                                                 {tk.status == 0 ? 'open' : tk.status == 1 ? 'closed' : 'solved'}
@@ -225,7 +280,11 @@ export const Support = ({isUser, setLoading, isLoading}:any) => {
                             ? (
                                 <div className={styles.readingMessage} style={{height:'13.5rem'}}>
                                     <div className={styles.messageHead} style={{height:'1.5rem',textAlign:'left',margin:'auto auto',padding:'0 .75rem',textOverflow:'ellipsis',overflow:'hidden'}}>
-                                        Topic: <span style={{color:'black',fontSize:'.8rem'}}>{read.desc}</span>
+                                        <span>Topic: <span style={{color:'black',fontSize:'.8rem'}}>{read.desc}</span></span>
+                                        <span style={{position:'absolute', right:'0rem',top:'1.25rem'}}>
+                                            { read.status == 0 ? <button className={`btn btn-sm`} onClick={() => updateTickets({tid:read.id,uid:isUser.uid,status:1})}><BsIcons.BsFileLock2 /></button> : null}
+                                            { read.status < 2 ? <button className={`btn btn-sm`} onClick={() => updateTickets({tid:read.id,uid:isUser.uid,status:2})}><BsIcons.BsCheck2Circle className={`text-red`} /></button> : null}
+                                        </span>
                                     </div>
                                     <div ref={ticketMsgs} className={styles.ticketMessages} style={{height:'9rem', border:'1px groove gray',width:'97%',margin:'auto auto',overflowY:'auto',borderRadius:'5px',display:'flex',flexWrap:'nowrap',flexDirection:'column',justifyContent:'flex-start',bottom:'0'}}>
                                         {
@@ -252,10 +311,27 @@ export const Support = ({isUser, setLoading, isLoading}:any) => {
                                         }
                                     </div>
                                     <div className={styles.ticketReply}>
-                                        <form className={styles.supportForm} onSubmit={submitReply}>
-                                            <textarea ref={rplyBox} className={styles.replyBox} placeholder={'Type your message here'}rows={1} disabled={newE}></textarea>
-                                            <button className={`btn btn-success`} type={'submit'} name={'submit'} disabled={newE} ><BsIcons.BsSend /></button>
-                                        </form>
+                                        {
+                                            read.status < 2
+                                            ? <form className={styles.supportForm} onSubmit={submitReply}>
+                                                <textarea ref={rplyBox} className={styles.replyBox} placeholder={'Type your message here'} rows={1} onChange={newMessage}></textarea>
+                                                <button className={`btn btn-sm btn-success`} type={'submit'} name={'submit'} ref={sendButton} disabled={disabled}>
+                                                    <BsIcons.BsSend />
+                                                </button>
+                                            </form>
+                                            : <div className=''>
+                                                <span className=''>Ticket ID: 
+                                                    <span className={`${styles.ticketIdField}`}>{read.id}</span>
+                                                </span>
+                                                <span className={`${styles.tooltip}`}>
+                                                    <button className='btn btn-sm btn-outline-success' style={{fontSize:'.75rem'}} onClick={copyTicketId}>
+                                                        <span className={`${styles.tooltipText}`} ref={cpyToolTip}>Copy</span>
+                                                        <FaIcons.FaCopy />
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        
+                                        }
 
                                     </div>
 

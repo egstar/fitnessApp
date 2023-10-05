@@ -867,6 +867,59 @@ ul.userPlanList {
     box-shadow:'0 1px 2px powderblue';
     height:5rem;
 }
+.ticketBoxes:hover {
+    cursor: pointer;
+}
+.ticketBoxesActive {
+    background:#d6d0a596;
+}
+.ticketIdField {
+    color:black;
+    text-decoration: underline dashed;
+}
+
+/*----------*/
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    margin-left:1rem;
+  }
+  
+  .tooltip .tooltipText {
+    visibility: hidden;
+    width: 140px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 999;
+    bottom: 125%;
+    left: 55%;
+    margin-left: -75px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  .tooltip .tooltipText::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+  }
+  
+  .tooltip:hover .tooltipText {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  /*---------------*/
 
 .ticketsList {
     list-style:none;
@@ -1024,6 +1077,9 @@ ul.userPlanList {
     color:#5d4db4;
     font-size:1vmax;
     padding: 1rem 0;
+    display:flex;
+    flex-wrap:wrap;
+    white-space: pre-wrap;
 }
 .msgUserContent {
     height:100%;
@@ -1244,6 +1300,7 @@ ul.userPlanList {
     .ticketBoxes {
         font-size:1.5vmax;
     }
+    
     .userTableContainer {
         width:max-content;
     }

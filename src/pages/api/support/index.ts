@@ -16,15 +16,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if(newTicket) {
         const newTick = await createTicket(newTicket.uid,newTicket.desc,newTicket.cat,newTicket.msg)
-        console.log(newTick)
         if(newTick.severity == 'ERROR') res.status(300).json(newTick.error)
         res.status(200).json(newTick)
     }
 
     if(newMsg){
-        
         const uReply = newMsg.uid ? await userReply(Number(newMsg.tid),Number(newMsg.uid),newMsg.msg) : await sysReply(Number(newMsg.tid),newMsg.msg)
-        console.log(uReply)
         if(uReply.Error) res.status(300).json(uReply.error)
         res.status(200).json(uReply)
     }
