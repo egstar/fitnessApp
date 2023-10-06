@@ -32,19 +32,20 @@ const AdminSupport = ({isUser, setLoading, isLoading}: any) => {
     },[ticket])
     
     const openDropDown = (tid: any,e:any) => {
-        if(!dropDownTicket || dropDownTicket != tid) {
+        if(activeDropDown != e.target || !e.target.classList.contains('Active')){
             setDropDownTicket(tid)
             setActiveDropDown(e)
         } else {
             setDropDownTicket(null)
             setActiveDropDown(null)
         }
+  
     }
 
     useEffect(() => {
-        if(dropDownTicket && optionsMenu.current) {
+        if(activeDropDown && optionsMenu) {
             window.addEventListener('mousedown', (e) =>{
-                if(!optionsMenu.current.contains(e.target)) {
+                if(activeDropDown != e.target) {
                     setDropDownTicket(null)
                     setActiveDropDown(null)
                 }
@@ -104,8 +105,9 @@ const AdminSupport = ({isUser, setLoading, isLoading}: any) => {
                         <th scope='col'>Time</th>
                         <th scope='col'>Category</th>
                         <th scope='col' style={{width:'70%'}}>Message</th>
-                        <th scope="col">Sender</th>
                         <th scope="col" style={{minWidth:'2.5rem'}}><BsIcons.BsGear /></th>
+                        <th scope="col">Sender</th>
+                        
                         </tr>
                     </thead>
                         {supportTickets && Object.entries(supportTickets).map((a: any,i: any) => {
@@ -119,24 +121,25 @@ const AdminSupport = ({isUser, setLoading, isLoading}: any) => {
                                             <th scope='col' >
                                                 { new Date(Object.entries(a[1][0].messages[0]).map((a:any, b:any) => { return ( a[1].date  )}).toString()).toLocaleDateString('en-UK') }
                                             </th>
-                                            <td >
+                                            <td style={{color: a[1][0].cat == 'Critical' ? 'red' : 'gray'}} >
                                                 {a[1][0].cat}
                                             </td>
                                             <td className={styles.tableTitle} style={{textOverflow:'ellipsis ellipsis',overflow:'hidden',whiteSpace:'nowrap',maxWidth:'10rem'}} title={Object.entries(a[1][0].messages[0]).map((a:any, b:any) => { return ( a[1].message  )}) as any}>
                                                 {Object.entries(a[1][0].messages[0]).map((a:any, b:any) => { return ( a[1].message  )})}
                                             </td>
-                                            <td>
-                                                {Object.entries(a[1][0].messages[0]).map((a:any, b:any) => { return ( a[1].sender  )})}
-                                            </td>
-                                            <th ref={optionsMenu} style={{margin:'auto auto',padding:'0 .2rem',maxWidth:'fit-content'}}>
-                                                <button className='btn btn-sm' onClick={(e) => openDropDown(a[0],e)}><FaIcons.FaSortDown /></button>
+                                           
+                                            <td ref={optionsMenu} style={{margin:'auto auto',padding:'0 .2rem',maxWidth:'fit-content'}}>
+                                                <button className='btn btn-sm' onClick={(e) => openDropDown(a[0],e)}><FaIcons.FaAngleLeft /></button>
                                                 <div className={`drop-down ${styles.dropDownOptions} ${dropDownTicket == a[0] && styles.activeDrop}`}>
-                                                    <button className={`btn btn-sm  ${styles.msgsOptions}`} data-tid={a[0]} data-uid={a[1][0].uid} data-status={a[1][0].status}><BsIcons.BsChatQuote/></button>  
+                                                    <button className={`btn btn-sm  ${styles.msgsOptions}`} data-tid={a[0]} data-uid={a[1][0].uid} data-status={a[1][0].status}><BsIcons.BsChatQuote/></button>
                                                     <button className={`btn btn-sm  ${styles.msgsOptions}`} onClick={() => updateTickets({tid:a[0],uid:a[1][0].uid,status:2})}><BsIcons.BsCheck2Circle /></button>
                                                     <button className={`btn btn-sm  ${styles.msgsOptions}`} onClick={() => updateTickets({tid:a[0],uid:a[1][0].uid,status:1})}><BsIcons.BsFileLock2Fill /></button>
-                                                    <button className={`btn btn-sm  ${styles.msgsOptions}`} onClick={() => updateTickets({tid:a[0],uid:a[1][0].uid,status:1})}><BsIcons.BsTrash /></button>    
+                                                    { isUser.lid > 3 ? <button className={`btn btn-sm  ${styles.msgsOptions}`} onClick={() => updateTickets({tid:a[0],uid:a[1][0].uid,status:1})}><BsIcons.BsTrash /></button> : null}
                                                 </div>
-                                            </th>
+                                            </td>
+                                            <td style={{color:'#3697b8'}}>
+                                                {Object.entries(a[1][0].messages[0]).map((a:any, b:any) => { return ( a[1].sender  )})}
+                                            </td>
                                         </tr>)
                                 }) }
                                 </tbody>
