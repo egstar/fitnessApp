@@ -491,8 +491,30 @@ span.homePage{
 
 }
 .msgsOptions {
-    margin:0 .1rem;
-    
+    font-size: small;
+    height:1.25rem;
+}
+.msgsOptions:hover {
+    color:lightblue;
+}
+.dropDownOptions {
+    display:flex;
+    flex-direction: column;
+    position: fixed;
+    margin-top:-3.5rem;
+
+    width:2.25rem;
+    height:0rem;
+    overflow: hidden;
+    justify-content: flex-start;
+    align-items: center;
+    transition: all 300ms ease-in;
+    background:white;
+    border-radius: 5px;
+}
+.activeDrop.dropDownOptions {
+    height:5.5rem;
+    border:1px solid #555;
 }
 
 .datePicker{
@@ -1142,6 +1164,8 @@ ul.userPlanList {
 .msgsTable {
     width:98%;
     margin: auto auto;
+    overflow: auto;
+    flex-wrap: nowrap;
 }
 .myUser {
     background:#583b63;

@@ -1,5 +1,5 @@
 import styles from '@/app/styles/profile.module.css'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import * as BsIcons from 'react-icons/bs';
 import * as FaIcons from 'react-icons/fa';
 
@@ -7,8 +7,11 @@ import * as FaIcons from 'react-icons/fa';
 const AdminSupport = ({isUser, setLoading, isLoading}: any) => {
     const [supportTickets, setSupportTickets] = useState({}) as any
     const [errorMessage, setErrorMessage ] = useState() as any
+    const [dropDownTicket, setDropDownTicket] = useState() as any
+    const [activeDropDown, setActiveDropDown] = useState() as any
     const [err, setError] = useState(false)
     const [ticket, updateTicket] = useState(0)
+    const optionsMenu = useRef() as any
 
     useEffect(() => {
         fetch('/api/admin/support', {
@@ -27,6 +30,30 @@ const AdminSupport = ({isUser, setLoading, isLoading}: any) => {
             setSupportTickets(data)
         })
     },[ticket])
+    
+    const openDropDown = (tid: any,e:any) => {
+        if(!dropDownTicket || dropDownTicket != tid) {
+            setDropDownTicket(tid)
+            setActiveDropDown(e)
+        } else {
+            setDropDownTicket(null)
+            setActiveDropDown(null)
+        }
+    }
+
+    useEffect(() => {
+        if(dropDownTicket && optionsMenu.current) {
+            window.addEventListener('mousedown', (e) =>{
+                if(!optionsMenu.current.contains(e.target)) {
+                    setDropDownTicket(null)
+                    setActiveDropDown(null)
+                }
+            })
+
+        }
+    },[dropDownTicket])
+
+
 
     const updateTickets = ({tid,uid,status}: any ) => {
         fetch('/api/support', {
@@ -78,7 +105,7 @@ const AdminSupport = ({isUser, setLoading, isLoading}: any) => {
                         <th scope='col'>Category</th>
                         <th scope='col' style={{width:'70%'}}>Message</th>
                         <th scope="col">Sender</th>
-                        <th scope="col" style={{width:'20%'}}><BsIcons.BsGear /></th>
+                        <th scope="col" style={{minWidth:'2.5rem'}}><BsIcons.BsGear /></th>
                         </tr>
                     </thead>
                         {supportTickets && Object.entries(supportTickets).map((a: any,i: any) => {
@@ -101,10 +128,14 @@ const AdminSupport = ({isUser, setLoading, isLoading}: any) => {
                                             <td>
                                                 {Object.entries(a[1][0].messages[0]).map((a:any, b:any) => { return ( a[1].sender  )})}
                                             </td>
-                                            <th style={{margin:'auto auto',padding:'0 .2rem',maxWidth:'fit-content'}}>
-                                                <button className={`btn btn-sm btn-warning ${styles.msgsOptions}`} data-tid={a[0]} data-uid={a[1][0].uid} data-status={a[1][0].status}><BsIcons.BsChatQuote/></button>  
-                                                <button className={`btn btn-sm btn-success ${styles.msgsOptions}`} onClick={() => updateTickets({tid:a[0],uid:a[1][0].uid,status:2})}><BsIcons.BsCheck2Circle /></button>
-                                                <button className={`btn btn-sm btn-primary ${styles.msgsOptions}`} onClick={() => updateTickets({tid:a[0],uid:a[1][0].uid,status:1})}><BsIcons.BsFileLock2Fill /></button>
+                                            <th ref={optionsMenu} style={{margin:'auto auto',padding:'0 .2rem',maxWidth:'fit-content'}}>
+                                                <button className='btn btn-sm' onClick={(e) => openDropDown(a[0],e)}><FaIcons.FaSortDown /></button>
+                                                <div className={`drop-down ${styles.dropDownOptions} ${dropDownTicket == a[0] && styles.activeDrop}`}>
+                                                    <button className={`btn btn-sm  ${styles.msgsOptions}`} data-tid={a[0]} data-uid={a[1][0].uid} data-status={a[1][0].status}><BsIcons.BsChatQuote/></button>  
+                                                    <button className={`btn btn-sm  ${styles.msgsOptions}`} onClick={() => updateTickets({tid:a[0],uid:a[1][0].uid,status:2})}><BsIcons.BsCheck2Circle /></button>
+                                                    <button className={`btn btn-sm  ${styles.msgsOptions}`} onClick={() => updateTickets({tid:a[0],uid:a[1][0].uid,status:1})}><BsIcons.BsFileLock2Fill /></button>
+                                                    <button className={`btn btn-sm  ${styles.msgsOptions}`} onClick={() => updateTickets({tid:a[0],uid:a[1][0].uid,status:1})}><BsIcons.BsTrash /></button>    
+                                                </div>
                                             </th>
                                         </tr>)
                                 }) }
