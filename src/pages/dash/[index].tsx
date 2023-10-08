@@ -20,10 +20,11 @@ export default function Profile({isUser, setUser,isLogged, setLogged, cookies, s
     const [data, setData] = useState([])
     const [PageInfo, setPage] = useState({} as PgInfo)
     const [isActive, setActive] = useState(0)
-    useEffect(() => {
 
-    
-    if(isLogged && !gotMenu){
+
+    useEffect(() => {
+        setIndex(router.asPath.split('/dash/')[1])
+        if(!gotMenu){
             setLoading(true)
             fetch('/api/menu', {
                 method: 'GET',
@@ -38,7 +39,7 @@ export default function Profile({isUser, setUser,isLogged, setLogged, cookies, s
             })
             .then((dt) => {
                 if(!dt.error) {
-                    dt.filter((f: MenuItem) => f.url.toLowerCase() === String(index).toLowerCase()).map((f: MenuItem) => {
+                    dt.filter((f: MenuItem) => f.url.toLowerCase() == String(index).toLowerCase()).map((f: MenuItem) => {
                         if(f){
                             setPage({
                                 page: f.opt,
@@ -68,9 +69,10 @@ export default function Profile({isUser, setUser,isLogged, setLogged, cookies, s
             setLoading(false)
         }
     },[])
+
     useEffect(() => {
         setLoading(true)
-        const dataFilter = data.filter((f: MenuItem) => f.url.toLowerCase() === String(index).toLowerCase())
+        const dataFilter = data.filter((f: MenuItem) => f.url.toLowerCase() == String(index).toLowerCase())
         if(dataFilter.length > 0){
             dataFilter.map((f: MenuItem) => {
                 setPage({
@@ -83,7 +85,7 @@ export default function Profile({isUser, setUser,isLogged, setLogged, cookies, s
             })
         } else {
             data.filter((f: MenuItem) => f.sub).map((f: MenuItem) => {
-                f.sub!.filter((s: any) => s.tree && String(s.tree!).toLowerCase() === String(index).toLowerCase())
+                f.sub!.filter((s: any) => s.tree && String(s.tree!).toLowerCase() == String(index).toLowerCase())
                 .map((sb: any, index: number) => {
                     setPage({
                         page: sb.sub,
@@ -106,6 +108,7 @@ export default function Profile({isUser, setUser,isLogged, setLogged, cookies, s
         setIndex(e.currentTarget.href.split('/dash/')[1])
         
     }
+
     
     
     return(
