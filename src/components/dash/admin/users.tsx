@@ -20,7 +20,7 @@ export const AdminUsers = ({isUser, setLoading, isLoading}: any) => {
     const [newpass, setNewPass] = useState('') as any
     useEffect(() => {
         if(!isUser || !usersList) setLoading(true)
-    },[isUser,!usersList])
+    },[isUser,usersList])
     const getUserList = () => fetch('/api/users', {
         method: 'GET',
         headers: {

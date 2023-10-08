@@ -10,6 +10,7 @@ export const Support = ({isUser, setLoading, isLoading}:any) => {
     const [newE, setNewE] = useState(false)
     const [disabled, setDisabled] = useState(true)
     const [newTkt, setNewTicket] = useState() as any
+    const [newMsg, setNewMsg] = useState(false) as any
     const sendButton = useRef() as any
     const ticketMsgs = useRef() as any
     const readingPanel = useRef() as any
@@ -41,20 +42,44 @@ export const Support = ({isUser, setLoading, isLoading}:any) => {
         }).then((res) => res.json()).then((data) => {
             if(data.utickets) setTickets(data)
         })
-        
         setLoading(false)
-        
-    },[newTkt])
+    },[])
+    useEffect(() => {
+        fetch('/api/support', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify({getUserTickets: {uid: isUser.uid}})
+        }).then((res) => res.json()).then((data) => {
+            if(data.utickets) setTickets(data)
+        })
+        setLoading(false)
+    },[newTkt,read])
     useEffect(() => {
         if(tickets) setLoading(false)
     },[tickets])
     function readMessages(e: any) {
+        fetch('/api/support', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify({readMsg: {tid: Number(e.currentTarget.dataset.ticketid)} })
+        }).then((res) => res.json())
+        .then((data) => {
+            if(data.utickets) setNewMsg(false)
+        })
         setRead({
             id: Number(e.currentTarget.dataset.ticketid),
             desc: e.currentTarget.dataset.ticket,
             messages: Object.entries(tickets.utickets).filter((tk: any) => tk[1][0].id == e.currentTarget.dataset.ticketid).map((tk: any) => (tk[1][0].messages)),
-            status: e.currentTarget.dataset.status
+            status: e.currentTarget.dataset.status,
+            new: newMsg
         })
+
     }
     useEffect(() => {
         if(read) ticketMsgs.current.scrollTop = Number(ticketMsgs.current.scrollHeight) + 100
@@ -229,8 +254,7 @@ export const Support = ({isUser, setLoading, isLoading}:any) => {
                     <ul className={styles.ticketsList}>
                         {
                             tickets && Object.entries(tickets.utickets).reverse().sort((a: any,b: any) => {return a[1][0].status - b[1][0].status}).map((tickeet: any, index:number) => {
-                                let tk= tickeet[1][0]
-                                
+                                let tk= tickeet[1][tickeet[1].length -1]
                                 return(
                                     <li 
                                     onClick={readMessages} 
@@ -242,8 +266,16 @@ export const Support = ({isUser, setLoading, isLoading}:any) => {
                                     data-messages={tk.messages}>
                                         <div className={styles.ticketDetails}>
                                             <span className={`col-3 ${styles.ticketStatus}`} style={{background:`${tk.status == 0 ? 'darkorange' : tk.status == 2 ? 'darkgreen' : 'maroon'}`}}>
-                                                {tk.status == 0 ? 'open' : tk.status == 1 ? 'closed' : 'solved'}
+                                                {tk.status == 0 ? 'open' : tk.status == 1 ? 'closed' : 'solved'}  
                                             </span>
+                                            <span>
+                                            { 
+                                                tk.new == false 
+                                                    ? <FaIcons.FaCircle style={{fontSize:'.5rem', margin: 'auto .5rem',color:'green'}} />
+                                                    : null
+                                            }
+                                            </span>
+                                            
                                             <span className={`col-9 ${styles.ticketName}`} style={{paddingLeft:'.5rem',overflow:'hidden', textOverflow:'ellipsis',flexWrap:'nowrap',whiteSpace:'nowrap'}}>
                                                 { tk.desc }
                                             </span>

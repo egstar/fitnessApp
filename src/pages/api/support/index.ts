@@ -1,5 +1,5 @@
 import * as env from '@/data/config'
-import { createTicket, deleteTicket, getTickets, sysReply, updateTicket, userReply } from '@/models/Dashboard/Support';
+import { createTicket, deleteTicket, getTickets, msgRead, sysReply, updateTicket, userReply } from '@/models/Dashboard/Support';
 import { getSession } from '@/models/Dashboard/Users/Users';
 import { uToken } from '@/pages';
 import { NextApiRequest, NextApiResponse } from "next";
@@ -9,11 +9,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if(req.method !== 'POST' && req.headers.origin !== env.WEBSITE) {
         res.status(400).json(`Access denied`)
     }
-    const {getUserTickets,ticketUpdate,newTicket,newMsg,tDestroy} = req.body
+    const {getUserTickets,ticketUpdate,newTicket,newMsg,tDestroy,readMsg} = req.body
     const userCookie = req.cookies![uToken]
     const userSession = await getSession(userCookie!)
     if(!userSession) res.status(400).json(`Access denied`)
 
+    if(readMsg){
+        const isRead = await msgRead(readMsg!.tid,1)
+        if(isRead.severity == 'ERROR') res.status(300).json(readMsg.error)
+        res.status(200).json(isRead)
+    }
+    
     if(newTicket) {
         const newTick = await createTicket(newTicket.uid,newTicket.desc,newTicket.cat,newTicket.msg)
         if(newTick.severity == 'ERROR') res.status(300).json(newTick.error)
@@ -66,6 +72,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                             }],
                             ['status']: vals.status,
                             ['cat']: vals.cat,
+                            ['new']: vals.readstatus,
                             ['desc']: vals.topic,
                             ['id']: vals.ticket_id
                         }]

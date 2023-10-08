@@ -20,52 +20,54 @@ export default function Profile({isUser, setUser,isLogged, setLogged, cookies, s
     const [data, setData] = useState([])
     const [PageInfo, setPage] = useState({} as PgInfo)
     const [isActive, setActive] = useState(0)
+    useEffect(() => {
+
     
     if(isLogged && !gotMenu){
-        setLoading(true)
-        fetch('/api/menu', {
-            method: 'GET',
-            headers: {
-                'Content-Type':'application/json'
-            },
-            credentials: 'include'
-        })
-        .then((res) => {
-            if(res.status != 200) return {error: res.json()}
-            return res.json()
-        })
-        .then((dt) => {
-            if(!dt.error) {
-                dt.filter((f: MenuItem) => f.url.toLowerCase() === String(index).toLowerCase()).map((f: MenuItem) => {
-                    if(f){
-                        setPage({
-                            page: f.opt,
-                            id: f.id,
-                            tree: f.url,
-                            sub: false
-                        })
-                        setActive(f.id)
-                    } else {
-                        setPage({
-                            page: 'Dashboard',
-                            id: 1,
-                            tree: 'home',
-                            sub: false
-                        })
-                        setActive(1)
-                    }
-                })
-                setData(dt)
-            } else {
-                removeCookie(uToken, {
-                    path: '/'
-                  })
-            }
-        })
-        setMenu(true)
-        setLoading(false)
-    }
-    
+            setLoading(true)
+            fetch('/api/menu', {
+                method: 'GET',
+                headers: {
+                    'Content-Type':'application/json'
+                },
+                credentials: 'include'
+            })
+            .then((res) => {
+                if(res.status != 200) return {error: res.json()}
+                return res.json()
+            })
+            .then((dt) => {
+                if(!dt.error) {
+                    dt.filter((f: MenuItem) => f.url.toLowerCase() === String(index).toLowerCase()).map((f: MenuItem) => {
+                        if(f){
+                            setPage({
+                                page: f.opt,
+                                id: f.id,
+                                tree: f.url,
+                                sub: false
+                            })
+                            setActive(f.id)
+                        } else {
+                            setPage({
+                                page: 'Dashboard',
+                                id: 1,
+                                tree: 'home',
+                                sub: false
+                            })
+                            setActive(1)
+                        }
+                    })
+                    setData(dt)
+                } else {
+                    removeCookie(uToken, {
+                        path: '/'
+                    })
+                }
+            })
+            setMenu(true)
+            setLoading(false)
+        }
+    },[])
     useEffect(() => {
         setLoading(true)
         const dataFilter = data.filter((f: MenuItem) => f.url.toLowerCase() === String(index).toLowerCase())
@@ -93,8 +95,9 @@ export default function Profile({isUser, setUser,isLogged, setLogged, cookies, s
                     setActive(sb.id)
                 })
             })
-            setLoading(false)
+            
         }
+        setLoading(false)
 
     },[index])
     

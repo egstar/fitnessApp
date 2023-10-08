@@ -35,24 +35,21 @@ export default function DashPage({PageInfo, isUser, setUser, setLoading, isLoadi
                 PageInfo.tree 
                 ? PageInfo.tree == 'today' 
                     ? (<Today setLoading={setLoading} isLoading={isLoading} />)
-                    : PageInfo.tree == 'tasks'
+                        : PageInfo.tree == 'tasks'
                         ? (<Plans  setLoading={setLoading} isLoading={isLoading}  />) 
-                        : PageInfo.tree == 'subs'
+                            : PageInfo.tree == 'subs'
                             ? (<CreaetPlan  setLoading={setLoading} isLoading={isLoading} />)
-                            : PageInfo.tree == 'settings'
+                                : PageInfo.tree == 'settings'
                                 ? (<Settings  setLoading={setLoading} isLoading={isLoading} isUser={isUser} setUser={setUser}/>)
-                                : PageInfo.tree == 'support'
+                                    : PageInfo.tree == 'support'
                                     ? (<Support  setLoading={setLoading} isLoading={isLoading}  isUser={isUser} />)
-                                    : PageInfo.tree == 'mail'
-                                        ? (<>Mailing system</>)
-                                        : PageInfo.tree == 'bills'
-                                        ? (<>Billing System</>)
-                                        : PageInfo.tree == 'users'
-                                        ? (<>Users List</>)
                                         : PageInfo.tree && PageInfo.tree.includes('admin')
-                                        ? PageInfo.tree == 'admin#users' ? <AdminUsers setLoading={setLoading} isLoading={isLoading} isUser={isUser} setUser={setUser} />
-                                            : PageInfo.tree == 'admin#support' ? <AdminSupport setLoading={setLoading} isLoading={isLoading} isUser={isUser} setUser={setUser} /> : null
-                                        : (<CreaetPlan  setLoading={setLoading} isLoading={isLoading} />)
+                                        ? PageInfo.tree == 'admin#users' 
+                                            ? <AdminUsers setLoading={setLoading} isLoading={isLoading} isUser={isUser} setUser={setUser} />
+                                                : PageInfo.tree == 'admin#support' 
+                                                ? <AdminSupport setLoading={setLoading} isLoading={isLoading} isUser={isUser} setUser={setUser} /> 
+                                                    : null
+                                            : (<CreaetPlan  setLoading={setLoading} isLoading={isLoading} />)
                 : (<><div className={styles.pagesContent}>
                     <div className={styles.pagesContainer}>
                         <div className={styles.userGraph}>

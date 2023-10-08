@@ -1,5 +1,5 @@
 import * as env from '@/data/config'
-import { getAdminTickets, deleteTicket, getTickets, sysReply, updateTicket, userReply } from '@/models/Dashboard/Support';
+import { getAdminTickets, deleteTicket, sysReply, updateTicket, userReply, msgRead } from '@/models/Dashboard/Support';
 import { getSession } from '@/models/Dashboard/Users/Users';
 import { uToken } from '@/pages';
 import { NextApiRequest, NextApiResponse } from "next";
@@ -9,15 +9,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if(req.method !== 'POST' && req.headers.origin !== env.WEBSITE) {
         res.status(400).json(`Access denied`)
     }
-    const {getUserTickets,ticketUpdate,newMsg,tDestroy} = req.body
+    const {getUserTickets,ticketUpdate,newMsg,tDestroy,readMsg} = req.body
     const userCookie = req.cookies![uToken]
     const userSession = await getSession(userCookie!)
     if(!userSession) res.status(400).json(`Access denied`)
 
+    if(readMsg){
+        const isRead = await msgRead(readMsg.tid,2)
+        if(isRead.severity == 'ERROR') res.status(300).json(readMsg.error)
+        res.status(200).json(isRead)
+    }
 
     if(newMsg){
         const uReply = newMsg.uid ? await userReply(Number(newMsg.tid),Number(newMsg.uid),newMsg.msg) : await sysReply(Number(newMsg.tid),newMsg.msg)
-        console.log(uReply)
         if(uReply.Error) res.status(300).json(uReply.error)
         res.status(200).json(uReply)
     }
@@ -61,6 +65,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                             }],
                             ['uid']: vals.uid,
                             ['status']: vals.status,
+                            ['new']: vals.adminread,
                             ['cat']: vals.cat,
                             ['desc']: vals.topic,
                             ['id']: vals.ticket_id

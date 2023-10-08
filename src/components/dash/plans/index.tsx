@@ -37,7 +37,7 @@ export const CreaetPlan = ({isLoading, setLoading}: any) => {
     
     useEffect(() => {
         if(fData) setFetched(fData)
-        setLoading(false)
+        if(fetched) setLoading(false)
     },[fData])
 
     const handleDateChange = (e: any) => {

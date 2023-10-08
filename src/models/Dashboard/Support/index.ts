@@ -3,7 +3,7 @@ import DbConn from "@/data/Database"
 export const getTickets = async(uid: number): Promise<any> => {
     try {
         const conn = await DbConn.connect()
-        const sQuery = `SELECT (SELECT COUNT(*) from support where uid=$1) AS total,(SELECT COUNT(*) from support where uid=$1 AND status=0) AS open, (SELECT COUNT(*) from support where uid=$1 AND status=1) AS closed, (SELECT COUNT(*) from support where uid=$1 AND status=2) AS solvd, uid,topic,cat,status,tm.* from support AS sp INNER JOIN ticket_messages AS tm on sp.id=tm.ticket_id WHERE uid=$1 ORDER BY status DESC, tdate DESC`
+        const sQuery = `SELECT (SELECT COUNT(*) from support where uid=$1) AS total,(SELECT COUNT(*) from support where uid=$1 AND status=0) AS open, (SELECT COUNT(*) from support where uid=$1 AND status=1) AS closed, (SELECT COUNT(*) from support where uid=$1 AND status=2) AS solvd, uid,topic,cat,status,tm.* from support AS sp INNER JOIN ticket_messages AS tm on sp.id=tm.ticket_id WHERE uid=$1 ORDER BY readstatus DESC, status ASC, tdate ASC`
         const result = await conn.query (sQuery, [uid])
         conn.release()
         if(!result.rows) throw new Error(`${result}`)
@@ -16,7 +16,7 @@ export const getTickets = async(uid: number): Promise<any> => {
 export const getAdminTickets = async(): Promise<any> => {
     try {
         const conn = await DbConn.connect()
-        const sQuery = `SELECT (SELECT COUNT(*) from support where status=0) AS open, (SELECT COUNT(*) from support where status=1) AS closed, (SELECT COUNT(*) from support where status=2) AS solvd, uid,topic,cat,status,tm.* from support AS sp INNER JOIN ticket_messages AS tm on sp.id=tm.ticket_id ORDER BY status ASC, tdate DESC`
+        const sQuery = `SELECT (SELECT COUNT(*) from support where status=0) AS open, (SELECT COUNT(*) from support where status=1) AS closed, (SELECT COUNT(*) from support where status=2) AS solvd, uid,topic,cat,status,tm.* from support AS sp INNER JOIN ticket_messages AS tm on sp.id=tm.ticket_id ORDER BY tm.adminread ASC, status ASC, tdate ASC`
         const result = await conn.query(sQuery)
         conn.release()
         if(!result.rows) throw new Error(`${result}`)
@@ -58,7 +58,7 @@ export const updateTicket = async(tid: number, uid: number, status: string): Pro
 export const userReply = async(tid: number, uid: number,msg :string): Promise<any> => {
     try {
         const conn = await DbConn.connect()
-        const sQuery = `INSERT INTO ticket_messages(ticket_id,message,sender,tdate) VALUES ($1,$2,(SELECT uname FROM users where id=$3),(SELECT CURRENT_TIMESTAMP)) RETURNING *`
+        const sQuery = `INSERT INTO ticket_messages(ticket_id,message,sender,tdate,readstatus,adminread) VALUES ($1,$2,(SELECT uname FROM users where id=$3),(SELECT CURRENT_TIMESTAMP), true,false) RETURNING *`
         const result = await conn.query(sQuery, [tid,msg,uid])
         
         conn.release()
@@ -73,11 +73,25 @@ export const userReply = async(tid: number, uid: number,msg :string): Promise<an
 export const sysReply = async(tid: number,msg :string): Promise<any> => {
     try {
         const conn = await DbConn.connect()
-        const sQuery = `INSERT INTO ticket_messages(ticket_id,message,sender,tdate) VALUES ($1,$2,'Support',(SELECT CURRENT_TIMESTAMP)) RETURNING *`
+        const sQuery = `INSERT INTO ticket_messages(ticket_id,message,sender,tdate,adminread,readstatus) VALUES ($1,$2,'Support',(SELECT CURRENT_TIMESTAMP),true,false) RETURNING *`
         const result = await conn.query(sQuery, [tid,msg])
         conn.release()
         if(!result.rows) throw new Error(`${result}`)
         
+        return result.rows[0]
+    } catch(e: any) {
+        return Error(e)
+    }
+}
+
+export const msgRead = async (tid: number, readUser: number): Promise<any> => {
+    try {
+        const conn = await DbConn.connect()
+        const sQuery = readUser == 1 ? `UPDATE ticket_messages SET readstatus=true WHERE ticket_id=$1 RETURNING *`: `UPDATE ticket_messages SET adminread=true WHERE ticket_id=$1  RETURNING *`
+        const result = await conn.query(sQuery, [tid])
+        conn.release()
+
+        if(!result.rows) throw new Error(`${result}`)
         return result.rows[0]
     } catch(e: any) {
         return Error(e)
