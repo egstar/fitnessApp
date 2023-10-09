@@ -1214,19 +1214,31 @@ ul.userPlanList {
     font-weight:lighter;
 }
 .killSession {
-    width:5rem;
-    font-size:.8vmax;
     font-weight: bold;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin:auto auto;
 }
-.killSession:hover .sessionExp {
-    display:none;
+.killSession > * {
+    margin:auto auto;
+    justify-content: center;
+    align-items: center;
 }
-.killSession:hover .stopSign {
-    display:inline-flex;
-    color:red;
-    font-weight: lighter;
-    
+
+.killSession:hover {
+    .sessionExp {
+        display:none;
+    }
+    .stopSign {
+        display:flex;
+        color:darkred;
+        font-weight: lighter;
+        cursor: pointer;
+    }
 }
+
 .btnDataShow {
     display:flex;
     justify-content:flex-end;

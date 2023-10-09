@@ -126,7 +126,6 @@ export const AdminUsers = ({isUser, setLoading, isLoading}: any) => {
         })
     }
     async function endSession(e: any){
-        
 
     }
     
@@ -224,7 +223,7 @@ export const AdminUsers = ({isUser, setLoading, isLoading}: any) => {
                                                             : isUser.lid < 4 && usr.lid > 3 
                                                                 ? true 
                                                                 : false 
-                                                    : false
+                                                    : usr.id == 1 ? true : false
                                             }>
                                                 <option value={1}>Trainee</option>
                                                 <option value={2}>Trainer</option>
@@ -234,14 +233,14 @@ export const AdminUsers = ({isUser, setLoading, isLoading}: any) => {
                                         </td>
                                         <td className={``}>
                                             {usr.sid && new Date(usr.sexpiry) > new Date() 
-                                            ?  (<div data-uid={usr.uid} className={`btn btn-sm  ${isUser.uid == usr.uid ? null : styles.killSession}`} onClick={endSession}>
-                                                    <span className={`${styles.sessionExp}`}>{new Date(usr.sexpiry).toLocaleString('en-UK',{day:'2-digit',month:'2-digit',formatMatcher:'best fit'}) + ' ' + new Date(usr.sexpiry).toLocaleString('en-UK',{timeStyle:'short'})}</span>
-                                                    <BsIcons.BsXCircle className={`${styles.stopSign}`} />
+                                            ?  (<div data-uid={usr.uid} className={`btn btn-sm ${isUser.uid == usr.uid ? null : styles.killSession}`}  style={{border:'none',outline:'none'}}>
+                                                    <div className={`${styles.sessionExp}`}>{new Date(usr.sexpiry).toLocaleString('en-UK',{day:'2-digit',month:'2-digit',formatMatcher:'best fit'}).toString() + ' ' + new Date(usr.sexpiry).toLocaleString('en-UK',{timeStyle:'short'}).toString()}</div>
+                                                    <BsIcons.BsXCircle className={`${styles.stopSign}`} onClick={endSession} />
                                                 </div>)
-                                            : '-'}
+                                            : '---'}
                                         </td>
-                                        <td className={``} title={new Date(usr.regdate).toLocaleString('en-UK')}>
-                                            {new Date(usr.regdate).toLocaleString('en-UK', {weekday:'short',day:'2-digit',month:'short',year:'numeric'})}
+                                        <td className={``} title={new Date(usr.regdate).toLocaleString('en-UK')} style={{fontSize:'.8rem',margin:'auto auto',display:'table-cell',justifyContent:'center', alignItems:'center'}}>
+                                            <div style={{paddingTop: '.5rem'}}>{new Date(usr.regdate).toLocaleString('en-UK', {weekday:'short',day:'2-digit',month:'short',year:'numeric'})}</div>
                                         </td>
                                         <td className={``}>
                                             <span data-bs-toggle={isUser.uid === usr.uid ? null : isUser.lid <= usr.lid ? null : "modal"} data-bs-target="#actionmodal" onClick={(e) => isUser.uid === usr.uid ? null : isUser.lid <= usr.lid ? null : isUser.lid < 4 ? null : chgUserPass(e)} data-uid={usr.uid} data-uname={usr.uname} className={`btn btn-sm btn-secondary`} title={'Change password'}><BsIcons.BsShieldLock /> </span>

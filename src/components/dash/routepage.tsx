@@ -40,32 +40,29 @@ export default function DashPage({PageInfo, isUser, setUser, setLoading, isLoadi
                             : PageInfo.tree == 'home' ? (<Home isUser={isUser} setUser={setUser} setLoading={setLoading} isLoading={isLoading} />)
                                 : PageInfo.tree == 'settings' ? (<Settings  setLoading={setLoading} isLoading={isLoading} isUser={isUser} setUser={setUser}/>)
                                     : PageInfo.tree == 'support' ? (<Support  setLoading={setLoading} isLoading={isLoading}  isUser={isUser} />)
-                                        : PageInfo.tree && PageInfo.tree.includes('admin') ? PageInfo.tree == 'admin#users' 
-                                                ? <AdminUsers setLoading={setLoading} isLoading={isLoading} isUser={isUser} setUser={setUser} />
-                                                    : PageInfo.tree == 'admin#support' ? <AdminSupport setLoading={setLoading} isLoading={isLoading} isUser={isUser} setUser={setUser} /> 
-                                                        : (<><div className={styles.pagesContent}>
-                                                            <div className={styles.pagesContainer}>
-                                                                <div className={styles.userGraph}>
-                                                                    <div className={styles.graphTab}>
-                                                                        <FaIcons.FaRegChartBar className={styles.graphIcon} style={{fontSize: '1rem'}} />
-                                                                        <div>Fitness App</div>
-                                                                    </div>
-                                                                </div>
-                                                                <div className={styles.graphTitle}>
-                                                                    <p style={{marginBottom: '0',marginTop: '0'}}>Data Description</p>
-                                                                </div>
-                                                            </div>
+                                        : PageInfo.tree.includes('admin') ? <Menu Page={PageInfo.tree} /> 
+                                            : (<><div className={styles.pagesContent}>
+                                                <div className={styles.pagesContainer}>
+                                                    <div className={styles.userGraph}>
+                                                        <div className={styles.graphTab}>
+                                                            <FaIcons.FaRegChartBar className={styles.graphIcon} style={{fontSize: '1rem'}} />
+                                                            <div>Fitness App</div>
                                                         </div>
-                                                        
-                                                        <div className={styles.pagesContent}>
-                                                            <div className={styles.pagesContainer_1}>
-                                                                <div className={styles.sectionContent}>
-                                                                    You&apos;re Data show up here
-                                                                </div>
-                                                            </div>
-                                                        </div></>)
-                                                : (<CreaetPlan  setLoading={setLoading} isLoading={isLoading} />)
-                    : <Error PageInfo statusCode={404}/>
+                                                    </div>
+                                                    <div className={styles.graphTitle}>
+                                                        <p style={{marginBottom: '0',marginTop: '0'}}>Data Description</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div className={styles.pagesContent}>
+                                                <div className={styles.pagesContainer_1}>
+                                                    <div className={styles.sectionContent}>
+                                                        You&apos;re Data show up here
+                                                    </div>
+                                                </div>
+                                            </div></>)
+                    : (<CreaetPlan  setLoading={setLoading} isLoading={isLoading} />)
             }
 
         </div>

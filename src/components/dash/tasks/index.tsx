@@ -32,7 +32,10 @@ if(!plans) return (<></>)
             <div className={`accordion overflow-auto ${styles.pagesContainer_1}`} id="userPlans">
                 { 
                     plans 
-                    ? plans.map((pl: any,index: number) => {
+                    ? plans.sort((a:any, b:any) => {
+                        if(new Date(a.planEnd) >= new Date(new Date().toLocaleDateString('en-UK')))
+                        return ((new Date(a.planStart) as any) - (new Date(b.planStart) as any))
+                    }).map((pl: any,index: number) => {
                         return (
                             <div key={'plan'+pl.plan} className={`accordion-item ${styles.accordionElm}`} >
                                 <div className="accordion-header" id={`userPlans-head${pl.plan.replaceAll(' ', '_')}`} style={{display:'flex',textAlign:'center',justifyContent:'center', alignItems:'center'}}>
