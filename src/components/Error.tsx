@@ -6,7 +6,7 @@ export const ErrorAlert = ({msg,atype,alertShow}: any) => {
     const [show, setShow] = useState(true)
     useEffect(() => {
         if(alertShow) setShow(true)
-    },[])
+    },[alertShow])
     return (
         <div className={`alert ${atype} ${show ? 'show' : 'fade'} alert-dismissible d-flex align-items-center`} role="alert" style={{position:'fixed',margin:0,right:'1rem',top:'3rem',zIndex:999}}>
             <BsIcons.BsInfoCircleFill style={{marginRight:'0.5rem'}}/>

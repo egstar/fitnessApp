@@ -197,7 +197,7 @@ const Today = ({setLoading,isLoading}:any) => {
                         </div>
                     </div>)
                 })
-                : <div className={`${styles.pagesContainer_1}`} style={{fontSize:'0.8vmax',color:'black',fontWeight:'lighter'}}>User doesn't have any active plans</div>
+                : <div className={`${styles.pagesContainer_1}`} style={{fontSize:'0.8vmax',color:'black',fontWeight:'lighter'}}>User doesn&apos;t have any active plans</div>
             }
             </div>
         </div>
