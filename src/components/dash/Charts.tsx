@@ -107,10 +107,6 @@ export const LineChart = ({labels,cData}: any) => {
                 text: `Today statics`
             }
         },
-        hover: {
-            mode: 'index',
-            intersec: false
-        },
         scales: {
             x: {
                 title: {
