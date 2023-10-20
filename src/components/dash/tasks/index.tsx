@@ -21,6 +21,17 @@ useEffect(() => {
     setNullPlans(false)
     setLoading(false)
 },[nullPlans])
+const leftTime = (newdate: any,startdate: any) => {
+    if(new Date(startdate) > new Date()) return ''
+    if(new Date(newdate) < new Date()) return 'Plan ended'
+    var planEnds = Math.floor((new Date(new Date(newdate.toString())) as any - (new Date() as any)) / 1000 /  60 / 60 /24)
+
+    var years = Math.floor(planEnds/365)
+    var months = Math.floor((planEnds-(years*365))/30)
+    var days = Math.floor(planEnds-(years*365)-(months*30))
+    return `Left Years: ${years}, Months: ${months}, Days: ${days} `
+
+}
 if(!plans) return (<></>)
 
     return (
@@ -33,23 +44,30 @@ if(!plans) return (<></>)
                 { 
                     plans 
                     ? plans.sort((a:any, b:any) => {
-                        if(new Date(a.planEnd) >= new Date(new Date().toLocaleDateString('en-UK')))
-                        return ((new Date(a.planStart) as any) - (new Date(b.planStart) as any))
+                        if(new Date(a.planStart) <= new Date() && new Date(a.planEnd) >= new Date() ){
+                            return ((new Date(a.planStart) as any) - (new Date(b.planStart) as any))
+                        } else {
+                            if(new Date(a.planStart) >= new Date()){
+                                return ((new Date(a.planEnd) as any) - (new Date(b.planEnd) as any))
+                            } else if(new Date(a.planEnd) < new Date()){
+                                return ((new Date(b.planEnd) as any) - (new Date(a.planEnd) as any))
+                            }
+                        }
                     }).map((pl: any,index: number) => {
                         return (
                             <div key={'plan'+pl.plan} className={`accordion-item ${styles.accordionElm}`} >
-                                <div className="accordion-header" id={`userPlans-head${pl.plan.replaceAll(' ', '_')}`} style={{display:'flex',textAlign:'center',justifyContent:'center', alignItems:'center'}}>
+                                <div className="accordion-header" id={`userPlans-head${pl.plan.replaceAll(' ', '_')}`} style={{display:'flex',textAlign:'center',justifyContent:'center', alignItems:'center',width:'100%'}}>
                                     
                                     <button className="accordion-button" style={{fontSize: '1.7vw', height:'1rem',textAlign:'center'}} type="button" data-bs-toggle="collapse" data-bs-target={`#userPlans${pl.plan.replaceAll(' ', '_')}`} aria-expanded={index ==0 ? "true" : 'false'} aria-controls={`userPlans${pl.plan.replaceAll(' ', '_')}`}>
-                                    <span className={styles.planActive} style={{background:`${new Date(pl.planEnd) < new Date() ? 'maroon' : new Date(pl.planStart) < new Date() ? 'darkgreen' : 'orange'}`}}>{new Date(pl.planEnd) < new Date(new Date(Date.now()+25*60*60*1000).toLocaleDateString()) ? "Finished" : new Date(new Date(pl.planStart).toLocaleDateString()) <= new Date(new Date(Date.now()).toLocaleDateString()) ? "Active" : "Not started"} </span>
-                                        <span>{pl.plan + ' Plan'}</span>
-                                        
+                                        <span className={`${styles.planPeriod}`} style={{position:'absolute', left:'70%',margin:'0 0',textAlign:'left', fontSize:'.8vmax',color:'lightslategray'}}>{leftTime(pl.planEnd,pl.planStart)}</span>
+                                        <span className={`${styles.planActive}`} style={{background:`${new Date(pl.planEnd) < new Date() ? 'maroon' : new Date(pl.planStart) < new Date() ? 'darkgreen' : 'orange'}`}}>{new Date(pl.planEnd) < new Date(new Date(Date.now()+24*60*60*1000)) ? "Finished" : new Date(new Date(pl.planStart)) <= new Date(new Date(Date.now())) ? "Active" : "Not started"} </span>
+                                        <span className={``} style={{position:'relative', left:'0',margin:'0 0',textAlign:'left',textOverflow:'ellipsis',overflow:'hidden',wordWrap:'normal'}}>{pl.plan + ' Plan'}</span>                                        
                                     </button>
                                 </div>
                                 <div id={`userPlans${pl.plan.replaceAll(' ', '_')}`} className={`accordion-collapse collapse ${index == 0 ? `show` : 'collapse'}`} aria-labelledby={`userPlans-head${pl.plan}`} style={{overflow:'auto'}} data-bs-parent="#userPlans">
                                     <div className={`accordion-body ${styles.accordionElmBody}`} style={{background:'#b69ca9',borderTop:'3px solid #583b63', overflow:'auto', maxHeight:'50vh',margin:0,padding:0}}>
                                         
-                                        <table className={`table  table-sm table-striped-columns overflow-auto ${styles.tableContainer}`} style={{overflow:'auto'}}>
+                                        <table className={`table table-sm table-striped-columns overflow-auto ${styles.tableContainer}`} style={{overflow:'auto'}}>
                                         <thead className={`${styles.tableHead}`}>
                                             <tr>
                                                 <th scope={`col`} colSpan={1}>Date</th>

@@ -1,6 +1,7 @@
 import styles from '@/app/styles/profile.module.css'
 import { useState, useEffect } from 'react';
-
+import * as BsIcons from 'react-icons/bs';
+import * as FaIcons from 'react-icons/fa';
 
 
 const Today = ({setLoading,isLoading}:any) => {
@@ -157,11 +158,10 @@ const Today = ({setLoading,isLoading}:any) => {
                     return (
                     <div key={pln.pid} className={`accordion-item`}>
                         <h2 className="accordion-header" id={`userPlans-head${pln.pid}`} style={{textAlign:'center'}}>
-                        <button className="accordion-button" type="button" style={{boxShadow:'none',fontSize: '1.7vw', height:'max-content',textAlign:'center'}} data-bs-toggle="collapse" data-bs-target={`#userPlans${pln.pid}`} aria-expanded="true" aria-controls={`userPlans${pln.pid}`}>
-                            <span className={`${styles.userPlan}`}>
-                                <span  style={{fontSize: '1.9vw'}}>{pln.pname + ' Plan'}</span>
-                                <span className={`${styles.tasksPercentage}`}>{tskPercentage} %</span>
-                            </span>
+                        <button className="accordion-button" type="button" style={{boxShadow:'none',fontSize: '1.7vw', height:'1rem',width:'100%',textAlign:'center'}} data-bs-toggle="collapse" data-bs-target={`#userPlans${pln.pid}`} aria-expanded="true" aria-controls={`userPlans${pln.pid}`}>
+                            <span style={{padding:'0 .5rem',color:'purple'}}><BsIcons.BsFan /> </span>
+                            <span  style={{fontSize: '1.9vw',textAlign:'left'}}>{pln.pname + ' Plan'}</span>
+                            <span className={`${styles.tasksPercentage}`} style={{position:'absolute', right:'3rem',margin:'0 0',textAlign:'left', fontSize:'.9vmax',color:'lightslategray'}}>{tskPercentage} %</span>
                         </button>
                         </h2>
                         <div id={`userPlans${pln.pid}`} className={`accordion-collapse collapse ${index == 0 ? 'show' : null}`} aria-labelledby={`userPlans-head${pln.pid}`} data-bs-parent="#userPlans">
@@ -197,7 +197,7 @@ const Today = ({setLoading,isLoading}:any) => {
                         </div>
                     </div>)
                 })
-                : <div className={`accordion-header ${styles.pagesContainer_1}`} style={{color:'red'}}>User has not started any plans</div>
+                : <div className={`${styles.pagesContainer_1}`} style={{fontSize:'0.8vmax',color:'black',fontWeight:'lighter'}}>User doesn't have any active plans</div>
             }
             </div>
         </div>

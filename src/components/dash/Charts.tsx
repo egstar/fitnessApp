@@ -11,8 +11,9 @@ import {
   BarElement,
   Legend,
   ArcElement,
+  Filler,
 } from 'chart.js';
-import { Line, Doughnut, Bar } from 'react-chartjs-2';
+import { Line, Doughnut, Bar, Bubble } from 'react-chartjs-2';
 import { faker } from '@faker-js/faker';
 
 
@@ -25,46 +26,64 @@ ChartJS.register(
     ArcElement,
     Title,
     Tooltip,
-    Legend
+    Legend,
+    Filler
   );
 
 
-export const BarsChart = ({labels,cData}: any) => {
-    console.log(labels,cData)
+export const BarsChart = ({cData,labels}: any) => {
+    cData && labels
+    let lbls = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun']
 
     const options = {
-        indexAxis: 'y' as const,
+        indexAxis: 'x' as const,
         responsive: true,
         elements: {
             bar: { borderWidth: 2 },
         },
+        maintainAspectRatio : false,
         plugins: {
-            legend: { position: 'right' as const },
-            title: { display: true,text: `'s plan statics` }
-        }
+            legend: { position: 'bottom' as const },
+            title: { display: true,text: `Weekly tasks statics` }
+        },
+        
     }
-
+    let plans = cData.map((a:any) => { a.plan.split('-')[0] })
+    let color = plans.map(() => `rgba(${Math.floor(Math.random()*100)}, ${Math.floor(Math.random()*0)}, ${Math.floor(Math.random()*120)}, 0.5)`)
+    
     const data = {
-        labels,
-        datasets: [
-            {
-                label: 'Dataset 1',
-                data: labels.map(() => faker.datatype.number({ min: 0, max: 100 })),
-                borderColor: 'rgb(255, 99, 132)',
-                backgroundColor: 'rgba(255, 99, 132, 0.5)',
-            },
-            {
-                label: 'Dataset 2',
-                data: labels.map(() => faker.datatype.number({ min: 0, max: 100 })),
-                borderColor: 'rgb(53, 162, 235)',
-                backgroundColor: 'rgba(53, 162, 235, 0.5)',
-            }
-        ]
-    }
+        labels: lbls,
+        datasets: cData.filter((a:any) => new Date(a.planStart) <= new Date() && new Date(a.planEnd) >= new Date).map((p:any,i:any) => { 
+            let tasks: any = []
+            let myData = 
+                 Object.entries(p.tasks)
+                .filter((a) => new Date(new Date(a[0])) > new Date(Date.now() - new Date().getDay() * 24 *60 * 60 * 1000) && new Date(new Date(a[0])) < new Date(Date.now() + (7- new Date().getDay()) * 24 * 60 * 60 * 1000))
+                .reverse().map((a:any) => {
+                    let tsks: number = 0
+                    a[1].forEach((a:any) => {
+                        tsks += a.tstatus
+                    })
+                    tasks.push(tsks)
+                    return tasks
+                })
+            return (
+                {
+                    label: p.plan.split('-')[0].toString(),
+                    data:  myData[0],
+                    backgroundColor: color[i],
+                    borderColor:  color[i],
+                    pointBorderColor: 'black',
+                    pointBackgroundColor: 'black'
+                }
+            )
+        })
+        
+    } 
+    
 
     return (
         <div className={styles.pagesContainer_2}>
-            <Bar  data={data} options={options} />
+            <Bar datasetIdKey='id' data={data} options={options} />
         </div> 
     )
 }
@@ -72,32 +91,90 @@ export const BarsChart = ({labels,cData}: any) => {
 
 
 export const LineChart = ({labels,cData}: any) => {
-    console.log(labels,cData)
+    labels && cData
+
+    let lbls = labels.map((a:any) => a.tname)
     const options = {
         responsive: true,
+        legend: { position: 'top' as const },
         plugins: {
-            legend: { position: 'top' as const },
-            title: { display: true, text: `'s plan statics` }
+            tooltip: {
+                mode: 'index',
+                intersect: false
+            },
+            title: {
+                display: true,
+                text: `Today statics`
+            }
+        },
+        hover: {
+            mode: 'index',
+            intersec: false
+        },
+        scales: {
+            x: {
+                title: {
+                display: true,
+                text: 'Tasks'
+                }
+            },
+            y: {
+                title: {
+                display: true,
+                text: 'Done'
+                },
+                min: 0,
+                max: 1,
+                ticks: {
+                // forces step size to be 50 units
+                stepSize: 1
+                }
+            }
         }
     }
 
+ 
+    let plans = cData.map((a:any) => { a.plan.split('-')[0] })
+    let color = plans.map(() => `rgba(${Math.floor(Math.random()*250)}, ${Math.floor(Math.random()*250)}, ${Math.floor(Math.random()*250)}, 0.5)`)
+    
     const data = {
-        labels,
-        datasets: [
-            {
-                label: 'Dataset 1',
-                data: labels.map(() => faker.datatype.number({ min: 0, max: 100 })),
-                borderColor: 'rgb(255, 99, 132)',
-                backgroundColor: 'rgba(255, 99, 132, 0.5)',
-            },
-            {
-                label: 'Dataset 2',
-                data: labels.map(() => faker.datatype.number({ min: 0, max: 100 })),
-                borderColor: 'rgb(53, 162, 235)',
-                backgroundColor: 'rgba(53, 162, 235, 0.5)',
-            }
-        ]
-    }
+        labels: lbls,
+        datasets: cData.filter((a:any) => new Date(a.planStart) <= new Date() && new Date(a.planEnd) >= new Date).map((a:any,i:any) => { 
+            let myData = 
+                 Object.entries(a.tasks)
+                .filter((a) => new Date(new Date(a[0])).toDateString() == new Date(new Date()).toDateString())
+                .map((a:any) => {
+                    
+                    let tasks = [] as any
+                    if(lbls.length == a[1].length) {
+                       a[1].forEach((a: any) =>  tasks.push(a.tstatus))
+                    } else {
+                        lbls.forEach((l:any) => {
+                            let found = false;
+                            let i = 0
+                            while( i < a[1].length && found == false){
+                                found = l.includes(a[1][i].tname)
+                                found ? tasks.push(a[1][i].tstatus) : null
+                                i++
+                            }
+                            !found ? tasks.push(0) : null
+                        })
+                    }
+                    return tasks
+                })
+            return (
+                {
+                    label: a.plan.split('-')[0].toString(),
+                    data:  myData[0],
+                    backgroundColor: color[i],
+                    borderColor:  color[i],
+                    pointBorderColor: 'black',
+                    pointBackgroundColor: 'black',
+                    fill:true,
+                }
+            )
+        })
+    } 
 
     return (
         <div className={styles.pagesContainer_2}>
@@ -108,53 +185,39 @@ export const LineChart = ({labels,cData}: any) => {
 
 
 
-  
 export const DoughnutChart = ({labels,cData}: any) => {
-    console.log(labels,cData)
-
+    labels && cData
     const options = {
         responsive: true,
         plugins: {
             legend: { position: 'bottom' as const },
-            title: { display: true, text: `Tasks of the day` }
+            title: { display: true, text: `Active plans statics` }
         }
     }
+    let plans = cData.filter((a:any) => new Date(a.planStart) <= new Date() && new Date(a.planEnd) >= new Date).map((a:any) =>  a.plan.split('-')[0])
+    let color = plans.map(() => `rgba(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, 0.5)`)
+
     const data = {
-        labels,
+        labels: plans,
         datasets: [
             {
-                label: 'Finished',
-                data: labels!.map(() => faker.datatype.number({ min: 0, max: 100 })),
-                backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)',
-                'rgba(55, 255, 60, 0.2)',
-                'rgba(255, 40, 255, 0.2)',
-                'rgba(25, 159, 64, 0.2)',
-                'rgba(150, 140, 30, 0.2)',
-                ],
-                borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)',
-                'rgba(55, 255, 60, 1)',
-                'rgba(255, 40, 255, 1)',
-                'rgba(25, 159, 64, 1)',
-                'rgba(150, 140, 30, 1)',
-                ],
-            }
+                label: 'Done tasks percentage',
+                data: cData.filter((a:any) => new Date(a.planStart) <= new Date() && new Date(a.planEnd) >= new Date()).map((a:any,i:any) => {
+                    const tillNowDays = Math.ceil(((new Date() as any) - (new Date(new Date(a.planStart).toLocaleDateString('en')) as any))/1000/60/60/24)
+                    const planDays = (((new Date(a.planEnd) as any) - (new Date(a.planStart) as any))/1000/60/60/24)
+                    const dailyTasksCount = Number(a.planStates.totalTasks) / planDays
+                    const currentTasks = Math.ceil(dailyTasksCount * tillNowDays)
+                    return (a.planStates.totalDone/currentTasks * 100).toFixed(2)
+                }),
+                backgroundColor: color,
+                borderColor:  color
+            },
         ]
     }
+
     return (
         <div className={styles.pagesContainer_2}>
-            <Doughnut  data={data} options={options} />
+            <Doughnut data={data} options={options} />
         </div> 
     )
 }
