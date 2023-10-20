@@ -98,10 +98,6 @@ export const LineChart = ({labels,cData}: any) => {
         responsive: true,
         legend: { position: 'top' as const },
         plugins: {
-            tooltip: {
-                mode: 'index',
-                intersect: false
-            },
             title: {
                 display: true,
                 text: `Today statics`
